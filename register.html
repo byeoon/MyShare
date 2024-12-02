@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyShare - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="navbar bg-base-300">
+    <div class="flex-1">
+    <a class="btn  btn-ghost text-xl" href="#">MyShare</a>
+    </div>
+    <div class="flex-none">
+    <ul class="menu menu-horizontal px-4">
+        <li><a>Compare</a></li>
+        <li><a>Download</a></li>
+    </ul>
+    <button class="btn bg-base-200">Login / Register</button>
+    <p>             </p>
+    <input type="checkbox" value="cyberpunk" bind:checked={checkbox} class="toggle theme-controller"/>
+</div>
+</div>
+<div class="card bg-base-200 w-80">
+    <div class="card-body">
+      <input placeholder="Email" class="input input-bordered" />
+      <label class="label cursor-pointer">
+        Accept terms of use
+        <input type="checkbox" class="toggle" />
+      </label>
+      <button class="btn btn-neutral">Save</button>
+    </div>
+  </div>
+</html>

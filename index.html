@@ -9,23 +9,68 @@
 </head>
 <div class="navbar bg-base-300">
     <div class="flex-1">
-    <a class="btn  btn-ghost text-xl">MyShare</a>
+    <a class="btn  btn-ghost text-xl" href="#">MyShare</a>
     </div>
     <div class="flex-none">
-    <ul class="menu menu-horizontal px-1">
+    <ul class="menu menu-horizontal px-4">
         <li><a>Compare</a></li>
+        <li><a>Download</a></li>
     </ul>
     <button class="btn bg-base-200">Login / Register</button>
-
-
+    <p>             </p>
+    <input type="checkbox" value="cyberpunk" bind:checked={checkbox} class="toggle theme-controller"/>
 </div>
 </div>
-<div class="hero bg-base-200 min-h-screen">
-    <div class="hero-content text-center">
+<div class="hero bg-base-200 min-h-screen"  style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp);">
+    <div class="hero-overlay bg-opacity-60"></div>
+    <div class="hero-content text-neutral-content text-center">
         <div class="max-w-md">
-            <h1 class="text-4xl font-bold">Sync your files remotely</h1>
+            <h1 class="text-5xl font-bold">Sync your files remotely</h1>
             <p class="py-6">
                 With MyShare, you can share files, notes, and links from any device and have them appear instantly.
             </p>
+            <button class="btn bg-primary font-bold">Get Started</button>
+            <p class="py-2">Scroll for more vvv</p>
         </div>
+
+        </div>
+    </div>
+    <div class="hero bg-base-200 min-h-screen">
+        <div class="hero-content flex-col lg:flex-row">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+            class="max-w-sm rounded-lg shadow-2xl" />
+          <div>
+            <h1 class="text-5xl font-bold">Don't go between platforms, use just one.</h1>
+            <p class="py-6">
+                Whether it's a drive link, personal notes to yourself, or images, MyShare has you covered.
+                Fast upload speeds and the added ability to send files to people you trust.
+            </p>
+            
+            <button class="btn btn-primary">Learn More</button> <br> <br>
+            <!-- <div class="stats stats-vertical lg:stats-horizontal shadow">
+                <div class="stat">
+                  <div class="stat-title">Downloads</div>
+                  <div class="stat-value">31K</div>
+                  <div class="stat-desc">Jan 1st - Feb 1st</div>
+                </div>
+              
+                <div class="stat">
+                  <div class="stat-title">New Users</div>
+                  <div class="stat-value">4,200</div>
+                  <div class="stat-desc">↗︎ 400 (22%)</div>
+                </div>
+              
+                <div class="stat">
+                  <div class="stat-title">New Registers</div>
+                  <div class="stat-value">1,200</div>
+                  <div class="stat-desc">↘︎ 90 (14%)</div>
+                </div>
+            -->
+              </div>
+          </div>
+          
+        </div>
+        
+      </div>
 </html>
