@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyShare</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
+    <link href="/css/app.css" rel="stylesheet">
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"
+      integrity="sha512-tWHlutFnuG0C6nQRlpvrEhE4QpkG1nn2MOUMWmUeRePl4e3Aki0VB6W1v3oLjFtd0hVOtRQ9PHpSfN6u6/QXkQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="/css/aos.css" />
+  </head>
+
+<div class="navbar bg-base-100 shadow-sm">
+    <div class="navbar-start">
+    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
+    </div>
+    <div class="navbar-end">
+      <ul class="menu menu-horizontal px-1">
+        <li><a onclick="location.href='/download.html';">Download</a></li>
+        <li><a onclick="location.href='/credits.html';">Credits</a></li>
+        <li><a onclick="location.href='/credits.html';">Pricing</a></li>
+      </ul>
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+          <div class="w-14 rounded-full">
+            <img src="/img/default.png" />
+          </div>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+          <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
+          <li> <a id="dd-profile" class="justify-between">Profile</a> </li>
+          <li><a id="dd-dashboard" href="/dashboard.html" >Dashboard</a></li>
+          <li><a id="dd-logout" onClick="logout()" >Logout</a></li>
+          <div class="divider m-0"></div>
+          <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Dark" value="default" />
+          <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Light" value="light" />
+        </ul>
+      </div>
+    </div>
+</div>
+
+  <footer class="footer footer-horizontal footer-center bg-base-300 text-base-content rounded p-10">
+    <nav class="grid grid-flow-col">
+      <a class="link link-hover" href="/about.html">About us</a> 
+      <a class="link link-hover" href="/contact.html">Contact</a> 
+      <a class="link link-hover" href="/tos.html">Terms of Service</a> 
+      <a class="link link-hover" href="/privacy.html">Privacy Policy</a> 
+      <a class="link link-hover" href="https://github.com/byeoon/MyShare">GitHub</a> 
+    </nav>
+      <p class="p-0">Copyright © 2025-2026 MyShare All right reserved</p>
+  </footer>
+</html>
+
+<script>
+
+// is this a good practice? probably not...
+async function isLoggedIn() {
+    try {
+      const response = await fetch('/api/email', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem("token")
+        }
+      });
+      if (!response.ok) {
+        throw new Error('You are not logged in!');
+      }
+      document.getElementById("dd-login").style.display = "none";
+    } catch (error) {
+      document.getElementById("dd-login").style.display = "block";
+      document.getElementById("dd-profile").style.display = "none";
+      document.getElementById("dd-logout").style.display = "none";
+      document.getElementById("dd-dashboard").style.display = "none";
+    }
+  }
+  isLoggedIn();
+
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location.href = "/";
+  }  
+</script>

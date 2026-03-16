@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyShare - Recovery</title>
+    <link href="/css/app.css" rel="stylesheet" />
+    <script src="../registerScript.js"></script>
+    <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico" />
+  </head>
+
+  <div class="navbar bg-base-100 shadow-sm">
+    <div class="navbar-start">
+    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
+    </div>
+    <div class="navbar-end">
+      <ul class="menu menu-horizontal px-1">
+        <li><a onclick="location.href='/download.html';">Download</a></li>
+        <li><a onclick="location.href='/credits.html';">Credits</a></li>
+        <li><a onclick="location.href='/credits.html';">Pricing</a></li>
+      </ul>
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+          <div class="w-14 rounded-full">
+            <img src="/img/default.png" />
+          </div>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+          <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
+          <li> <a id="dd-profile" class="justify-between">Profile</a> </li>
+          <li><a id="dd-dashboard" href="/dashboard.html" >Dashboard</a></li>
+          <li><a id="dd-logout" onClick="logout()" >Logout</a></li>
+          <div class="divider m-0"></div>
+          <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Dark" value="default" />
+          <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Light" value="light" />
+        </ul>
+      </div>
+    </div>
+</div>
+
+
+  <div class="hero bg-base-200 min-h-screen">
+    <div class="card card-border bg-base-300 border-base-100 w-80 shadow-xl">
+      <div class="card-body">
+        <div
+          class="container"
+          style="display: grid; align-items: center; grid-template-columns: 1fr 1fr 1fr; column-gap: 2px;">
+          <img
+            src="/img/myshare_white.png"
+            style="height: 64px; width: 64px"
+          />
+          <h2 class="text-xl font-bold py-2">Account Recovery</h2>
+        </div>
+        <h3>Please enter the email associated to your account.</h3>
+
+        <input id="email" placeholder="Email" class="input input-bordered" />
+        <button
+          class="btn btn-primary"
+          style="padding: 20px;"
+          id="login"
+          type="submit"
+          onClick="postToServer()"
+        >
+        Send Link
+        </button>
+      </div>
+    </div>
+  </div>
+</html>
+
+<script>
+  var input = document.getElementById("email");
+  input.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("login").click();
+    }
+  });
+
+  async function postToServer() {
+    const email = document.getElementById("email").value;
+    const userData = {
+      email: email
+    };
+
+    try {
+      const response = await fetch(
+        "/api/users/accountrecovery",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Err");
+      }
+      const data = await response.json();
+      alert("If that email exists, a recovery link has been sent!");
+    } catch (error) {
+      console.error("err:", error);
+      alert("error" + error);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location.href = "/";
+  }
+</script>

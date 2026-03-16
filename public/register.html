@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyShare - Register</title>
+  <link href="/css/app.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
+</head>
+
+<div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar-start">
+    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
+  </div>
+  <div class="navbar-end">
+    <ul class="menu menu-horizontal px-1">
+      <li><a onclick="location.href='/download.html';">Download</a></li>
+      <li><a onclick="location.href='/credits.html';">Credits</a></li>
+      <li><a onclick="location.href='/credits.html';">Pricing</a></li>
+    </ul>
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div class="w-14 rounded-full">
+          <img src="/img/default.png" />
+        </div>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
+        <div class="divider m-0"></div>
+        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
+          aria-label="Dark" value="default" />
+        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
+          aria-label="Light" value="light" />
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="hero bg-base-200 min-h-screen">
+  <div class="card card-border bg-base-300 w-80 shadow-xl border-base-100">
+    <div class="card-body">
+      <div class="container"
+        style="display: grid;align-items: center; grid-template-columns: 1fr 1fr 1fr;column-gap: 2px; padding: 8px;">
+        <img src="/img/myshare_white.png" style="height: 64px; width: 64px;">
+        <h2 class="text-2xl font-bold py-2">Register</h2>
+      </div>
+
+      <input id="email" type="email" placeholder="Email" class="input validator input-bordered p-4" />
+      <input id="username" placeholder="Username" class="input input-bordered p-4 mt-2" />
+      <input id="pw" type="password" placeholder="Password" class="input input-bordered p-4 mt-2" />
+
+      <label class="fieldset-label">
+        <input type="checkbox" class="checkbox my-4" id="tosCheckbox" />
+        You have read & agreed to our TOS
+      </label>
+      </label>
+      <button class="btn btn-primary" id="register" onClick="postToServer()">Create Account</button>
+      <div class="divider"></div>
+      <p2 class="text-center text-1xl">Already have an account? <a class="link" href="/login.html">Login!</a></p2>
+    </div>
+  </div>
+</div>
+
+</html>
+
+<script>
+  async function postToServer() {
+    const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('pw').value;
+    const tosChecked = document.getElementById('tosCheckbox').checked;
+    if (!tosChecked) {
+      alert('accept the tos if cute');
+      return;
+    }
+
+    //  if(password.textContent.length < 8) {
+    //   alert("Please use a password that has 8 characters or more.");
+    //   return;
+    //  } 
+
+    const userData = {
+      email: email,
+      username: username,
+      password: password
+    };
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+      if (!response.ok) {
+        throw new Error('err');
+        alert(err);
+      }
+      const responseData = await response.json();
+      console.log('user saved:', responseData);
+      alert('Please log in with your new credentials!');
+      window.location.replace("/login.html");
+    } catch (error) {
+      console.error('err:', error);
+      alert("That's not supposed to happen.. there was an error making your account. Please try again! Error: " + error);
+      window.location.replace("/register.html");
+    }
+  }
+</script>

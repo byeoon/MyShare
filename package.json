@@ -1,0 +1,32 @@
+{
+  "name": "myshare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "npx @tailwindcss/cli -i .tailwind.css -o /css/app.css"
+  },
+  "keywords": [],
+  "author": "byeoon",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.9",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.0",
+    "multer": "^1.4.5-lts.2",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.10.0",
+    "path": "^0.12.7",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "daisyui": "^5.5.19",
+    "tailwindcss": "^4.0.9"
+  }
+}

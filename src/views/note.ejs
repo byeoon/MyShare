@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= note.title %></title>
+    <meta content="<%= note.title %>" property="og:title"/>
+    <meta content="<%= note.content %>" property="og:description"/>
+    <meta content=<%= note.file %> property="og:image" />
+    <meta name="twitter:card" content="summary_large_image">
+    <link href="/css/app.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
+    <style>
+    .multiline {
+      white-space: pre-wrap;
+    }
+    </style>
+</head>
+
+<body>
+<div class="hero bg-base-300 min-h-screen">
+  <div class="card card-border border-base-200 shadow-2xl bg-base-100 w-120">
+      <div class="card-body card-border">
+        <div class="badgeDiv"> 
+          <div class="badge badge-outline badge-error">important</div>
+        </div>
+            <h2 class="text-2xl font-bold py-2"><%= note.title %></h2> 
+       <img id="noteImage" src="" width="auto" height="auto" style="max-height: 480px; max-width: 480px;">  
+        <h2 class="text-s py-2 text-wrap multiline break-words"><%= note.content %> </h2>
+        <div class="buttonHolder"> 
+          <button class="btn btn-primary btn-sm" id="copyClipboard" type="submit" onClick="copyToClipboard('<%= note.content %>')">Copy Content</button>
+          <button class="btn btn-primary btn-sm" id="copyClipboardImg" type="submit" onClick="copyToClipboardImg('<%= note.file %>')">Copy Image</button>
+        </div>
+  
+        <br>
+        <div class="breadcrumbs text-xs">
+          <ul>
+            <li><a href="/dashboard.html">Dashboard</a></li>
+          </ul>
+          <h2 class="text-xs">Uploaded by UID <%= note.userId %></h2> 
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  function copyToClipboard(content) {
+    navigator.clipboard.writeText(content).then(() => {
+      alert("Content copied to clipboard!");
+    }).catch(err => {
+      console.error("Error copying text: ", err);
+    });
+  }
+
+  function copyToClipboardImg(content) {
+    navigator.clipboard.write(content).then(() => {
+      alert("Content copied to clipboard!");
+    }).catch(err => {
+      console.error("Error copying image: ", err);
+    });
+  }
+
+  function updateImage()  {
+    var image = document.getElementById("noteImage");
+    image.src = `<%= note.file %>`;
+
+    var tester = new Image();
+    tester.addEventListener('error', imageNotFound);
+    tester.src = `<%= note.file %>`;
+  }
+
+  function imageNotFound() {
+    var image = document.getElementById("noteImage");
+    var imagecopy = document.getElementById("copyClipboardImg");
+    console.log('The image failed to load, removing from document...');
+    image.className = "hidden";
+    imagecopy.className = "hidden";
+  }
+
+  updateImage();
+</script>
+
+</html>

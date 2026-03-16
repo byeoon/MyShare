@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="/css/app.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
+  <style>
+    .multiline {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar-start">
+    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
+  </div>
+  <div class="navbar-end">
+    <ul class="menu menu-horizontal px-1">
+      <li><a onclick="location.href='/download.html';">Download</a></li>
+      <li><a onclick="location.href='/credits.html';">Credits</a></li>
+      <li><a onclick="location.href='/credits.html';">Pricing</a></li>
+    </ul>
+    <div class="dropdown dropdown-end">
+      <label for="my-drawer-2" class="lg:hidden btn btn-primary drawer-button">Open Sidebar</label>
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div class="w-14 rounded-full">
+          <img src="/img/default.png" />
+        </div>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
+        <li> <a id="dd-profile" class="justify-between">Profile</a> </li>
+        <li><a id="dd-dashboard" href="/dashboard.html">Dashboard</a></li>
+        <li><a id="dd-logout" onClick="logout()">Logout</a></li>
+        <div class="divider m-0"></div>
+        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
+          aria-label="Dark" value="default" />
+        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
+          aria-label="Light" value="light" />
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div class="drawer lg:drawer-open">
+  <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col items-center justify-center">
+    <h1 class="font-bold text-xl p-8">Your Notes</h1><br>
+
+    <!-- MyShare Modal-->
+    <input type="checkbox" id="my_modal_6" class="modal-toggle" />
+    <div class="modal" role="dialog">
+      <div class="modal-box space-y-3 shadow-2xl border border-primary max-w-xl">
+        <h2 class="text-lg font-bold">Create a Note</h2>
+        <p>Upload text or images. Uploaded images have a higher priority than links, and will be the one that gets
+          uploaded instead.</p>
+        <input type="text" id="shareInput_title" placeholder="Title" class="input w-full max-w-xs" />
+        <textarea class="textarea w-full max-w-xs" id="shareInput_content" placeholder="Content"></textarea>
+        <br>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">Upload a file</legend>
+          <input type="file" id="shareInput_fileUpload" name="file" class="file-input file-input-sm" />
+          <label class="fieldset-label">Max size: 1GB</label>
+          <p>Or, you can link to an image</p>
+          <input type="text" id="shareInput_file" placeholder="Image URL" class="input w-full max-w-xs" />
+        </fieldset>
+        <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this Note unlisted?
+        (People with the link can view it!)
+        <div class="modal-action">
+          <label for="my_modal_6" class="btn">Cancel</label>
+          <label for="my_modal_6" class="btn bg-success text-white" onClick="saveShare()">Save</label>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <!-- MyShare Modal For Deleting-->
+    <input type="checkbox" id="deleteModal" class="modal-toggle" />
+    <div class="modal" role="dialog">
+      <div class="modal-box space-y-3 shadow-2xl border border-primary">
+        <h2 class="text-lg font-bold">Delete Note</h2>
+        <p>Type the ID of the note you want to delete (Note: Very primitive, will come up with a better deletion system
+          soon).</p>
+        <input type="text" id="deleteInput_id" placeholder="ID" class="input w-full max-w-xs" />
+        <div class="modal-action">
+          <label for="deleteModal" class="btn">Cancel</label>
+          <label for="deleteModal" class="btn bg-error text-white" onClick="deleteShare()">Delete</label>
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <!--Notes-->
+    <div id="notes" class="flex flex-wrap gap-8 justify-center">
+
+    </div>
+  </div>
+  <div class="drawer-side">
+    <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+      <h3 id="hellousername" class="text-lg font-bold p-2">Hello, {undefined}</h3>
+      <label for="my_modal_6" class="btn bg-primary text-white">Create a Note</label>
+      <li class=""></li> <!--Divider-->
+      <li><a>Upload Settings</a></li>
+      <li><a>Embed Configuration</a></li>
+      <li class=""></li> <!--Divider-->
+      <li><label for="deleteModal" class="text-red-400" id="deleteMode">Delete Notes</label></li>
+    </ul>
+  </div>
+</div>
+
+</html>
+<script>
+
+  async function isLoggedIn() {
+    try {
+      const response = await fetch('/api/email', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem("token")
+        }
+      });
+      if (!response.ok) {
+        throw new Error('You are not authenticated!');
+        console.log(err);
+        document.getElementById("dd-login").style.display = "block";
+        document.getElementById("dd-profile").style.display = "none";
+        document.getElementById("dd-logout").style.display = "none";
+        document.getElementById("dd-dashboard").style.display = "none";
+        window.location.replace("/login.html");
+      }
+
+      const responseData = await response.json();
+      document.getElementById("hellousername").innerHTML = `Hello, ${responseData.username}`;
+      localStorage.setItem("userId", responseData.userId);
+      document.getElementById("dd-login").style.display = "none";
+
+    } catch (error) {
+      console.log('Error while authenticating:', error);
+      document.getElementById("dd-login").style.display = "block";
+      document.getElementById("dd-profile").style.display = "none";
+      document.getElementById("dd-logout").style.display = "none";
+      document.getElementById("dd-dashboard").style.display = "none";
+      window.location.replace("/login.html");
+    }
+  }
+  isLoggedIn();
+
+  async function saveShare() {
+    let textcontent = document.getElementById("shareInput_content").value;
+    let title = document.getElementById("shareInput_title").value;
+    let file = document.getElementById("shareInput_file").value;
+    let fileUploaded = document.getElementById("shareInput_fileUpload").files[0];
+    let visible = document.getElementById("shareInput_visibility").checked;
+
+    if (fileUploaded != null) {
+      const formData = new FormData();
+      formData.append('file', fileUploaded);
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData, // FormData handles 'Content-Type': 'multipart/form-data' automatically
+        });
+        alert("upload complete");
+      } catch {
+        console.log('failed');
+      };
+    }
+
+    const userData = {
+      title: title,
+      content: textcontent,
+      file: file,
+      visibility: visible
+    };
+
+    try {
+      const response = await fetch('/api/notes/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization-id': localStorage.getItem("userId"),
+          'authorization': localStorage.getItem("token")
+        },
+        body: JSON.stringify(userData)
+      });
+      if (!response.ok) {
+        throw new Error('You are not signed in!');
+        console.log(err);
+        window.location.replace("/login.html");
+      }
+      const responseData = await response.json();
+      loadShares();
+    } catch (error) {
+      console.error('err:', error);
+    }
+  }
+
+  async function loadShares() {
+    try {
+      const response = await fetch('/api/notes/get', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem("token"),
+          'authorization-id': localStorage.getItem("userId")
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch notes');
+      }
+      const responseData = await response.json();
+      const notesContainer = document.getElementById("notes");
+      notesContainer.innerHTML = '';
+
+
+      responseData.notes.forEach(note => {
+        const smallnote = note.content.length > 60 ? note.content.substring(0, 80) + '....' : note.content;
+        const content = `
+                <div class="card bg-base-300 w-96 shadow-2xl card-border border-base-100">
+                    <div class="card-body">
+                        <h2 id="note-title" class="card-title">
+                            ${note.title}
+                        </h2>
+                        <p id="note-content" class="multiline break-words">${smallnote}</p>
+                        <div id="badges" class="card-actions justify-end">
+                            <div class="badge badge-outline badge-error">important</div>
+                            <div class="badge badge-neutral">no expiration</div>
+                        </div>   
+                        <a class="btn btn-sm" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-sm" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                    </div>
+                    <div class="absolute top-2 right-2 text-lg font-bold">#${note.id}</div>
+                </div>
+            `;
+        notesContainer.innerHTML += content;
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  loadShares();
+
+  async function viewNote(id) {
+    window.location.href = `/api/notes/${id}`;
+  }
+
+
+  async function deleteShare(id) {
+    const noteId = document.getElementById("deleteInput_id").value;
+    const userData = {
+      noteId: noteId,
+      userId: localStorage.getItem("userId")
+    };
+
+    try {
+      const response = await fetch(`/api/notes/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem("token")
+        },
+        body: JSON.stringify(userData)
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch notes');
+      }
+      loadShares(); // Reload shares since it's deleted now.
+    }
+    catch (error) {
+      console.error("Error deleting note:", error);
+    }
+  }
+
+  function copyToClipboard(content) {
+    navigator.clipboard.writeText(content).then(() => {
+      console.log("Copied! " + content);
+    }).catch(err => {
+      console.log("Error copying text: ", err);
+    });
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location.href = "/";
+  }  
+</script>
