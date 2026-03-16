@@ -41,8 +41,8 @@ The application will be accessible at [http://localhost:3010](http://localhost:3
 ---
 
 ## TODO List
-- [/] Label/Tagging functionality
-- [x] File uploads (Integrated with notes)
+- [ ] Label/Tagging functionality
+- [x] File uploading
 - [x] Host-independent frontend
 - [ ] Finalize UI/UX polish
 - [ ] Advanced security hardening

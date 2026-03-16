@@ -1,89 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyShare - Login</title>
-    <link href="/css/app.css" rel="stylesheet" />
-    <script src="../registerScript.js"></script>
-    <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico" />
-  </head>
-  <div class="navbar bg-base-100 shadow-sm">
-    <div class="navbar-start">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyShare - Login</title>
+  <link href="/css/app.css" rel="stylesheet" />
+  <script src="../registerScript.js"></script>
+  <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico" />
+</head>
+<div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar-start">
     <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
-    </div>
-    <div class="navbar-end">
-      <ul class="menu menu-horizontal px-1">
-        <li><a onclick="location.href='/download.html';">Download</a></li>
-        <li><a onclick="location.href='/credits.html';">Credits</a></li>
-        <li><a onclick="location.href='/credits.html';">Pricing</a></li>
-      </ul>
-      <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-          <div class="w-14 rounded-full">
-            <img src="/img/default.png" />
-          </div>
+  </div>
+  <div class="navbar-end">
+    <ul class="menu menu-horizontal px-1">
+      <li><a onclick="location.href='/download.html';">Download</a></li>
+      <li><a onclick="location.href='/credits.html';">Credits</a></li>
+    </ul>
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div class="w-14 rounded-full">
+          <img src="/img/default.png" />
         </div>
-        <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-          <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
-          <div class="divider m-0"></div>
-          <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Dark" value="default" />
-          <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start" aria-label="Light" value="light" />
-        </ul>
       </div>
-        <!-- remove the 2 divs below and it looks cool -->
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
+        <div class="divider m-0"></div>
+        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
+          aria-label="Dark" value="default" />
+        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
+          aria-label="Light" value="light" />
+      </ul>
     </div>
+    <!-- remove the 2 divs below and it looks cool -->
+  </div>
 </div>
 
 
-  <div class="hero bg-base-200 min-h-screen">
-    <div class="card card-border bg-base-300 border-base-100 w-80 shadow-xl">
-      <div class="card-body">
-        <div
-          class="container"
-          style="
+<div class="hero bg-base-200 min-h-screen">
+  <div class="card card-border bg-base-300 border-base-100 w-80 shadow-xl">
+    <div class="card-body">
+      <div class="container" style="
             display: grid;
             align-items: center;
             grid-template-columns: 1fr 1fr 1fr;
             column-gap: 2px;
             padding: 8px;
-          "
-        >
-          <img
-            src="/img/myshare_white.png"
-            style="height: 64px; width: 64px"
-          />
-          <h2 class="text-2xl font-bold py-2">Login</h2>
-        </div>
-        <!-- <center><div class="card card-bordered bg-error w-60 py-2 px-4">
+          ">
+        <img src="/img/myshare_white.png" style="height: 64px; width: 64px" />
+        <h2 class="text-2xl font-bold py-2">Login</h2>
+      </div>
+      <!-- <center><div class="card card-bordered bg-error w-60 py-2 px-4">
         <p class="font-semibold">An error occurred while trying to login.</p>
       </div></center>
   -->
-        <input id="email" placeholder="Email" class="input input-bordered mt-2" />
-        <input
-          id="pw"
-          type="password"
-          placeholder="Password"
-          class="input input-bordered p-4 mt-2"
-        />
+      <input id="email" placeholder="Email" class="input input-bordered mt-2" />
+      <input id="pw" type="password" placeholder="Password" class="input input-bordered p-4 mt-2" />
 
-        <button
-          class="btn btn-primary mt-4"
-          style="padding: 20px;"
-          id="login"
-          type="submit"
-          onClick="postToServer()"
-        >
-          Login
-        </button>
-        <div class="divider"></div>
-        <p2 class="text-center"
-          >Don't have an account?
-          <a class="link" href="/register.html">Register!</a></p2>
-        <p2 class="text-center"><a class="link" href="/recovery.html">Forgot credentials?</a></p2>
-      </div>
+      <button class="btn btn-primary mt-4" style="padding: 20px;" id="login" type="submit" onClick="postToServer()">
+        Login
+      </button>
+      <div class="divider"></div>
+      <p2 class="text-center">Don't have an account?
+        <a class="link" href="/register.html">Register!</a>
+      </p2>
+      <p2 class="text-center"><a class="link" href="/recovery.html">Forgot credentials?</a></p2>
     </div>
   </div>
+</div>
+
 </html>
 
 <script>
