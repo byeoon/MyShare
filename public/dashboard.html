@@ -165,11 +165,17 @@
       try {
         const response = await fetch('/api/upload', {
           method: 'POST',
-          body: formData, // FormData handles 'Content-Type': 'multipart/form-data' automatically
+          body: formData,
         });
-        alert("upload complete");
-      } catch {
-        console.log('failed');
+        if (response.ok) {
+          const uploadData = await response.json();
+          file = `/uploads/${uploadData.filename}`;
+          // alert("upload complete");
+        } else {
+          console.error("Upload failed");
+        }
+      } catch (error) {
+        console.error('Error during upload:', error);
       };
     }
 

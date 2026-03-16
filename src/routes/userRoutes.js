@@ -12,8 +12,8 @@ var transporter = nodemailer.createTransport({
     auth: {
         user: process.env.EMAIL_NAME,
         pass: process.env.EMAIL_PASSWORD
-   }
-  });
+    }
+});
 
 router.post("/users", async (req, res) => {
     let { username, email, password } = req.body;
@@ -21,23 +21,23 @@ router.post("/users", async (req, res) => {
         const userRepo = AppDataSource.getRepository("User")
         const existing = await userRepo.findOneBy({ email })
         if (existing) {
-            return res.status(400).json({ message : "User already exists!"})
+            return res.status(400).json({ message: "User already exists!" })
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         password = hashedPassword; // This feels insecure.
 
-        const user = userRepo.create({username, email, password});
+        const user = userRepo.create({ username, email, password });
         const newuser = await userRepo.save(user)
-        
+
         const userToken = jwt.sign({ email: user.email }, 'secret');
-        res.status(201).json({ message: "User created.", user : newuser, token: userToken})
-    } catch(error) {
+        res.status(201).json({ message: "User created.", user: newuser, token: userToken })
+    } catch (error) {
         console.log(error);
-        res.status(500).json({message : "internal error"})
+        res.status(500).json({ message: "internal error" })
     }
 })
 
-router.post('/users/login', async(req,res) => {
+router.post('/users/login', async (req, res) => {
     const { email, password } = req.body;
     const userRepo = AppDataSource.getRepository("User");
     const user = await userRepo.findOneBy({ email: email });
@@ -47,7 +47,7 @@ router.post('/users/login', async(req,res) => {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
-    
+
     if (!passwordMatch) {
         securityLogMessage("User typed the wrong password.");
         return res.status(401).json({ error: 'Invalid password!' });
@@ -58,7 +58,7 @@ router.post('/users/login', async(req,res) => {
     securityLogMessage("New user signed in with token: " + token);
 })
 
-router.post('/users/accountrecovery',async(req,res) => {
+router.post('/users/accountrecovery', async (req, res) => {
     const { email } = req.body;
     const userRepo = AppDataSource.getRepository("User");
     const user = await userRepo.findOneBy({ email: email });
@@ -72,10 +72,10 @@ router.post('/users/accountrecovery',async(req,res) => {
         from: process.env.EMAIL_NAME,
         to: email,
         subject: 'MyShare Account Recovery',
-        text:`You have requested to recover your account details. Click here to reset your password: ${process.env.BASE_URL}/recovery.html`
-    } 
+        text: `You have requested to recover your account details. Click here to reset your password: ${process.env.BASE_URL}/recovery.html`
+    }
 
-    transporter.sendMail(mail, function(error, info) {
+    transporter.sendMail(mail, function (error, info) {
         if (error) {
             console.log(error);
         } else {

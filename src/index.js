@@ -9,7 +9,7 @@ const userRoutes = require('./routes/userRoutes')
 const statsRoutes = require('./routes/statsRoutes')
 const notesRoutes = require('./routes/notesRoutes')
 const multer = require('multer');
-const upload = multer({ dest: './uploads/' });
+const upload = multer({ dest: path.join(__dirname, '..', 'uploads') });
 
 const userRepo = AppDataSource.getRepository("User")
 
@@ -24,6 +24,7 @@ app.use("/api", userRoutes)
 app.use("/api", statsRoutes)
 app.use("/api", notesRoutes) // todo remove prefix
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -71,10 +72,12 @@ app.get('/api/email', verifyToken, async (req, res) => {
   }
 });
 
-app.post("/upload", upload.single('file'), async (req, res) => {
-  console.log(req.file);
-  coreLogMessage("Image upload complete.")
-  res.send("success.");
+app.post("/api/upload", upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+  coreLogMessage("Image upload complete: " + req.file.filename);
+  res.json({ filename: req.file.filename });
 })
 
 app.use((req, res, next) => {
