@@ -32,7 +32,6 @@
       </div>
       <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
-        <li> <a id="dd-profile" class="justify-between">Profile</a> </li>
         <li><a id="dd-dashboard" href="/dashboard.html">Dashboard</a></li>
         <li><a id="dd-logout" onClick="logout()">Logout</a></li>
         <div class="divider m-0"></div>
@@ -56,40 +55,22 @@
     <div class="modal" role="dialog">
       <div class="modal-box space-y-3 shadow-2xl border border-primary max-w-xl">
         <h2 class="text-lg font-bold">Create a Note</h2>
-        <p>Upload text or images. Uploaded images have a higher priority than links, and will be the one that gets
-          uploaded instead.</p>
+        <p>Upload a note with text/image below. You can add priority tags, deletion time, and visibility.</p>
         <input type="text" id="shareInput_title" placeholder="Title" class="input w-full max-w-xs" />
         <textarea class="textarea w-full max-w-xs" id="shareInput_content" placeholder="Content"></textarea>
         <br>
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Upload a file</legend>
           <input type="file" id="shareInput_fileUpload" name="file" class="file-input file-input-sm" />
-          <label class="fieldset-label">Max size: 1GB</label>
-          <p>Or, you can link to an image</p>
+          <label class="fieldset-label">Max size: 1GB (Not enforced yet!)</label>
           <input type="text" id="shareInput_file" placeholder="Image URL" class="input w-full max-w-xs" />
         </fieldset>
-        <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this Note unlisted?
-        (People with the link can view it!)
+        <input type="text" id="shareInput_tags" placeholder="Tag" class="input w-full max-w-xs" /> <br>
+
+        <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this Note private?
         <div class="modal-action">
           <label for="my_modal_6" class="btn">Cancel</label>
           <label for="my_modal_6" class="btn bg-success text-white" onClick="saveShare()">Save</label>
-        </div>
-      </div>
-    </div>
-    <br>
-
-
-    <!-- MyShare Modal For Deleting-->
-    <input type="checkbox" id="deleteModal" class="modal-toggle" />
-    <div class="modal" role="dialog">
-      <div class="modal-box space-y-3 shadow-2xl border border-primary">
-        <h2 class="text-lg font-bold">Delete Note</h2>
-        <p>Type the ID of the note you want to delete (Note: Very primitive, will come up with a better deletion system
-          soon).</p>
-        <input type="text" id="deleteInput_id" placeholder="ID" class="input w-full max-w-xs" />
-        <div class="modal-action">
-          <label for="deleteModal" class="btn">Cancel</label>
-          <label for="deleteModal" class="btn bg-error text-white" onClick="deleteShare()">Delete</label>
         </div>
       </div>
     </div>
@@ -106,10 +87,10 @@
       <h3 id="hellousername" class="text-lg font-bold p-2">Hello, {undefined}</h3>
       <label for="my_modal_6" class="btn bg-primary text-white">Create a Note</label>
       <li class=""></li> <!--Divider-->
-      <li><a>Upload Settings</a></li>
-      <li><a>Embed Configuration</a></li>
+      <li><a>Upload Settings (WIP)</a></li>
+      <li><a>Embed Configuration (WIP)</a></li>
       <li class=""></li> <!--Divider-->
-      <li><label for="deleteModal" class="text-red-400" id="deleteMode">Delete Notes</label></li>
+      <li><a class="text-red-400 cursor-pointer" id="deleteMode">Manage Notes</a></li>
     </ul>
   </div>
 </div>
@@ -130,7 +111,6 @@
         throw new Error('You are not authenticated!');
         console.log(err);
         document.getElementById("dd-login").style.display = "block";
-        document.getElementById("dd-profile").style.display = "none";
         document.getElementById("dd-logout").style.display = "none";
         document.getElementById("dd-dashboard").style.display = "none";
         window.location.replace("/login.html");
@@ -144,7 +124,6 @@
     } catch (error) {
       console.log('Error while authenticating:', error);
       document.getElementById("dd-login").style.display = "block";
-      document.getElementById("dd-profile").style.display = "none";
       document.getElementById("dd-logout").style.display = "none";
       document.getElementById("dd-dashboard").style.display = "none";
       window.location.replace("/login.html");
@@ -157,7 +136,9 @@
     let title = document.getElementById("shareInput_title").value;
     let file = document.getElementById("shareInput_file").value;
     let fileUploaded = document.getElementById("shareInput_fileUpload").files[0];
+    let tags = document.getElementById("shareInput_tags").value; // subject to change
     let visible = document.getElementById("shareInput_visibility").checked;
+
 
     if (fileUploaded != null) {
       const formData = new FormData();
@@ -183,6 +164,7 @@
       title: title,
       content: textcontent,
       file: file,
+      tags: tags,
       visibility: visible
     };
 
@@ -228,21 +210,24 @@
 
       responseData.notes.forEach(note => {
         const smallnote = note.content.length > 60 ? note.content.substring(0, 80) + '....' : note.content;
+        const tags = `
+         <div class="badge badge-outline">${note.tags}</div>
+         `
         const content = `
-                <div class="card bg-base-300 w-96 shadow-2xl card-border border-base-100">
+                <div class="card bg-base-300 w-96 shadow-2xl card-border border-[#141414] border-4">
                     <div class="card-body">
-                        <h2 id="note-title" class="card-title">
+                        <h1 id="note-title" class="card-title text-2xl font-bold">
                             ${note.title}
-                        </h2>
+                        </h1>
                         <p id="note-content" class="multiline break-words">${smallnote}</p>
                         <div id="badges" class="card-actions justify-end">
-                            <div class="badge badge-outline badge-error">important</div>
-                            <div class="badge badge-neutral">no expiration</div>
+                            ${tags}
                         </div>   
-                        <a class="btn btn-sm" onClick="viewNote(${note.id})">View</a>
-                        <a class="btn btn-sm" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                        <a class="btn btn-lg font-bold" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-md" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                        <a class="delete-btn text-red-300 btn btn-sm hidden" onClick="deleteShare(${note.id})">Delete</a>
                     </div>
-                    <div class="absolute top-2 right-2 text-lg font-bold">#${note.id}</div>
+                    <div class="absolute top-2 right-2 text-sm">#${note.id}</div>
                 </div>
             `;
         notesContainer.innerHTML += content;
@@ -257,9 +242,8 @@
     window.location.href = `/api/notes/${id}`;
   }
 
-
   async function deleteShare(id) {
-    const noteId = document.getElementById("deleteInput_id").value;
+    const noteId = id;
     const userData = {
       noteId: noteId,
       userId: localStorage.getItem("userId")
@@ -296,5 +280,13 @@
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     window.location.href = "/";
-  }  
+  }
+
+  // Toggle delete buttons visibility
+  document.getElementById("deleteMode").addEventListener("click", function () {
+    const deleteBtns = document.querySelectorAll(".delete-btn");
+    deleteBtns.forEach(btn => {
+      btn.classList.toggle("hidden");
+    });
+  });
 </script>

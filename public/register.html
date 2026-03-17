@@ -64,20 +64,17 @@
 </html>
 
 <script>
+
   async function postToServer() {
     const email = document.getElementById('email').value;
     const username = document.getElementById('username').value;
     const password = document.getElementById('pw').value;
     const tosChecked = document.getElementById('tosCheckbox').checked;
+
     if (!tosChecked) {
-      alert('accept the tos if cute');
+      alert('Make sure to read and accept the TOS before making an account.');
       return;
     }
-
-    //  if(password.textContent.length < 8) {
-    //   alert("Please use a password that has 8 characters or more.");
-    //   return;
-    //  } 
 
     const userData = {
       email: email,
@@ -102,7 +99,7 @@
       window.location.replace("/login.html");
     } catch (error) {
       console.error('err:', error);
-      alert("That's not supposed to happen.. there was an error making your account. Please try again! Error: " + error);
+      alert("There was an error while trying to make an account. Error: " + error);
       window.location.replace("/register.html");
     }
   }

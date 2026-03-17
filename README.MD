@@ -30,7 +30,7 @@ cp .env.example .env
 ```
 Open `.env` and fill in your details:
 - `DB_PASSWORD`: Set this to the password you chose during database setup.
-- `BASE_URL`: Set this to `http://localhost:3010` (used for email links).
+- `BASE_URL`: Set this to `http://localhost:3010` or wherever you are hosting.
 
 ### 5. Start the Application
 ```bash
@@ -39,6 +39,13 @@ node src/index.js
 The application will be accessible at [http://localhost:3010](http://localhost:3010).
 
 ---
+
+## Troubleshooting
+
+### CSS Not Refreshing
+If you are having issues with the tailwindcss configuration, try running `npm run build-css` to rebuild it.
+
+
 
 ## TODO List
 - [ ] Label/Tagging functionality

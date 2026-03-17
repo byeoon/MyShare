@@ -15,11 +15,20 @@ var transporter = nodemailer.createTransport({
     }
 });
 
+// **
+// Contrary to what the API says, this is actually the registration endpoint.
+// When you make an account, the information gets passed here.
+// The site administrator can disable registration by configuring the .env file. (ALLOW_REGISTERING)
+// **
 router.post("/users", async (req, res) => {
     let { username, email, password } = req.body;
     try {
-        const userRepo = AppDataSource.getRepository("User")
-        const existing = await userRepo.findOneBy({ email })
+        const userRepo = AppDataSource.getRepository("User");
+        if (process.env.ALLOW_REGISTERING == "false") {
+            return res.status(400).json({ message: "Registering is not allowed. Please contact the site administrator for more information." });
+        }
+
+        const existing = await userRepo.findOneBy({ email });
         if (existing) {
             return res.status(400).json({ message: "User already exists!" })
         }
@@ -27,9 +36,9 @@ router.post("/users", async (req, res) => {
         password = hashedPassword; // This feels insecure.
 
         const user = userRepo.create({ username, email, password });
-        const newuser = await userRepo.save(user)
-
+        const newuser = await userRepo.save(user);
         const userToken = jwt.sign({ email: user.email }, 'secret');
+
         res.status(201).json({ message: "User created.", user: newuser, token: userToken })
     } catch (error) {
         console.log(error);
@@ -37,6 +46,10 @@ router.post("/users", async (req, res) => {
     }
 })
 
+// **
+// This logs the user in by checking the email and if the hashed password matches.
+// If all conditions are met, the user gets a token and logs in.
+// **
 router.post('/users/login', async (req, res) => {
     const { email, password } = req.body;
     const userRepo = AppDataSource.getRepository("User");

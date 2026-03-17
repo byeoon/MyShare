@@ -3,6 +3,9 @@ const AppDataSource = require('../database')
 
 const router = express.Router();
 
+// **
+// Gets the total number of users and notes. This is used on the main page.
+// **
 router.get("/stats", async (req, res) => {
     try {
         const userRepo = AppDataSource.getRepository("User")
@@ -14,7 +17,7 @@ router.get("/stats", async (req, res) => {
         res.status(200).json({ totalUsers, totalNotes })
     } catch (error) {
         coreLogMessage("Error gathering main page stats: " + error.message)
-        res.status(500).json({message : "internal error"})
+        res.status(500).json({ message: "internal error" })
     }
 })
 
