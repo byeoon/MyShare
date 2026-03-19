@@ -39,6 +39,7 @@ router.post("/users", async (req, res) => {
         const newuser = await userRepo.save(user);
         const userToken = jwt.sign({ email: user.email }, 'secret');
 
+        res.cookie('token', userToken, { httpOnly: false, secure: false, maxAge: 3600000 * 24 * 7 }); // 7 days
         res.status(201).json({ message: "User created.", user: newuser, token: userToken })
     } catch (error) {
         console.log(error);
@@ -67,6 +68,7 @@ router.post('/users/login', async (req, res) => {
     }
 
     const token = jwt.sign({ email: user.email }, 'secret');
+    res.cookie('token', token, { httpOnly: false, secure: false, maxAge: 3600000 * 24 * 7 }); // 7 days
     res.json({ token });
     securityLogMessage("New user signed in with token: " + token);
 })

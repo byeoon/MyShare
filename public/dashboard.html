@@ -44,10 +44,18 @@
 </div>
 
 
+<input type="checkbox" id="image_modal_toggle" class="modal-toggle" />
+<div class="modal" role="dialog" id="image_preview_modal">
+  <div class="modal-box max-w-5xl p-0 bg-transparent shadow-none border-none relative">
+    <label for="image_modal_toggle" class="btn btn-sm btn-circle absolute right-2 top-2 z-10">✕</label>
+    <img id="modal_image_display" src="" class="w-full h-auto rounded-lg shadow-2xl" />
+  </div>
+  <label class="modal-backdrop" for="image_modal_toggle">Close</label>
+</div>
+
 <div class="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-  <div class="drawer-content flex flex-col items-center justify-center">
-    <h1 class="font-bold text-xl p-8">Your Notes</h1><br>
+  <div class="drawer-content flex flex-col items-center justify-start min-h-screen pt-8">
 
     <input type="checkbox" id="my_modal_6" class="modal-toggle" />
     <div class="modal" role="dialog">
@@ -84,9 +92,33 @@
     </div>
     <br>
 
-    <div id="notes" class="flex flex-wrap gap-8 justify-center">
-      <!--Notes are placed inside here-->
+    <div class="tabs tabs-lifted tabs-lg w-full max-w-6xl px-4">
+      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-200)] text-lg font-bold h-16"
+        aria-label="📝 Your Notes" checked="checked" />
+      <div class="tab-content bg-base-200 border-base-300 rounded-box p-10 shadow-inner">
+        <div id="notes" class="flex flex-wrap gap-8 justify-center">
+          <!--Notes are placed inside here-->
+        </div>
+      </div>
+
+      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-200)] text-lg font-bold h-16"
+        aria-label="🌐 Instance-wide" />
+      <div class="tab-content bg-base-200 border-base-300 rounded-box p-10 shadow-inner">
+        <div id="public-notes" class="flex flex-wrap gap-8 justify-center">
+          <!--Public notes are placed inside here-->
+        </div>
+      </div>
+
+      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-200)] text-lg font-bold h-16"
+        aria-label="⚙️ Settings" />
+      <div class="tab-content bg-base-100 border-base-300 rounded-box p-10">
+        <div class="flex flex-col items-center justify-center py-20 text-base-content/50">
+          <p class="text-xl font-bold">Settings</p>
+          <p>Configuration options will appear here.</p>
+        </div>
+      </div>
     </div>
+
   </div>
   <div class="drawer-side">
     <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
@@ -235,6 +267,7 @@
       currentTags = [];
       renderTagList();
       loadShares();
+      loadPublicShares();
     } catch (error) {
       console.error('err:', error);
     }
@@ -278,6 +311,31 @@
                         <div id="badges" class="card-actions justify-end">
                             ${tagsHtml}
                         </div>   
+                        <div id="attachments" class="mt-2"> 
+                          ${(() => {
+            if (!note.file) return '';
+            const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(note.file);
+            if (isImage) {
+              return `
+                                <div class="relative group cursor-pointer w-20 h-20 overflow-hidden rounded-lg border-2 border-primary/20 hover:border-primary transition-all" onclick="showPreview('${note.file}')">
+                                  <img src="${note.file}" class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              `;
+            } else {
+              return `<a href="${note.file}" target="_blank" class="link link-primary flex items-center gap-1 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                View Attachment
+                              </a>`;
+            }
+          })()}
+                        </div>
                         <a class="btn btn-lg font-bold" onClick="viewNote(${note.id})">View</a>
                         <a class="btn btn-md" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
                         <a class="delete-btn text-red-300 btn btn-sm hidden" onClick="deleteShare(${note.id})">Delete</a>
@@ -291,10 +349,92 @@
       console.error('Error:', error);
     }
   }
+
+  async function loadPublicShares() {
+    try {
+      const response = await fetch('/api/notes/public', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch public notes');
+      }
+      const responseData = await response.json();
+      const publicNotesContainer = document.getElementById("public-notes");
+      publicNotesContainer.innerHTML = '';
+
+      responseData.notes.forEach(note => {
+        const smallnote = note.content.length > 60 ? note.content.substring(0, 80) + '....' : note.content;
+        let tagsHtml = '';
+        if (Array.isArray(note.tags)) {
+          note.tags.forEach(tag => {
+            const fontColor = tagBadgeColorGet(tag.color);
+            tagsHtml += `<div class="badge border-none hover:scale-105 transition-transform cursor-default" style="background-color: ${tag.color}; color: ${fontColor}">${tag.text}</div>`;
+          });
+        }
+
+        const content = `
+                <div class="card bg-base-300 w-96 shadow-2xl card-border border-[#141414] border-4">
+                    <div class="card-body">
+                        <div class="flex justify-between items-center mb-2">
+                           <span class="badge badge-secondary badge-sm pb-1 font-bold">@${note.author}</span>
+                           <div class="text-xs opacity-50">#${note.id}</div>
+                        </div>
+                        <h1 id="note-title" class="card-title text-2xl font-bold">
+                            ${note.title}
+                        </h1>
+                        <p id="note-content" class="multiline break-words">${smallnote}</p>
+                        <div id="badges" class="card-actions justify-end">
+                            ${tagsHtml}
+                        </div>   
+                        <div id="attachments" class="mt-2"> 
+                          ${(() => {
+            if (!note.file) return '';
+            const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(note.file);
+            if (isImage) {
+              return `
+                                <div class="relative group cursor-pointer w-20 h-20 overflow-hidden rounded-lg border-2 border-primary/20 hover:border-primary transition-all" onclick="showPreview('${note.file}')">
+                                  <img src="${note.file}" class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              `;
+            } else {
+              return `<a href="${note.file}" target="_blank" class="link link-primary flex items-center gap-1 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                View Attachment
+                              </a>`;
+            }
+          })()}
+                        </div>
+                        <a class="btn btn-lg font-bold" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-md" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                    </div>
+                </div>
+            `;
+        publicNotesContainer.innerHTML += content;
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
   loadShares();
+  loadPublicShares();
 
   async function viewNote(id) {
     window.location.href = `/api/notes/${id}`;
+  }
+
+  function showPreview(url) {
+    document.getElementById("modal_image_display").src = url;
+    document.getElementById("image_modal_toggle").checked = true;
   }
 
   async function deleteShare(id) {
@@ -336,6 +476,8 @@
     localStorage.removeItem("userId");
     window.location.href = "/";
   }
+
+  loadShares();
 
   document.getElementById("deleteMode").addEventListener("click", function () {
     const deleteBtns = document.querySelectorAll(".delete-btn");

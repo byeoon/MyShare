@@ -9,16 +9,26 @@ const userRoutes = require('./routes/userRoutes')
 const statsRoutes = require('./routes/statsRoutes')
 const notesRoutes = require('./routes/notesRoutes')
 const multer = require('multer');
-const upload = multer({ dest: path.join(__dirname, '..', 'uploads') });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '..', 'uploads'))
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+});
+const upload = multer({ storage: storage });
 
 const userRepo = AppDataSource.getRepository("User")
 
-const app = express();
+const cookieParser = require('cookie-parser');
 const { coreLogMessage, securityLogMessage } = require('./utils/Logger')
-
 const PORT = process.env.PORT || 3010
 const HOST = process.env.HOST || "127.0.0.1"
+const app = express();
 
+app.use(cookieParser());
 app.use(bodyparser.json())
 app.use("/api", userRoutes)
 app.use("/api", statsRoutes)
@@ -43,7 +53,7 @@ AppDataSource.initialize().then(() => {
 // Verifies user token, security measure.
 // **
 const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization'];
+  const token = req.headers['authorization'] || req.cookies.token || req.query.token;
   if (!token) {
     securityLogMessage("User does not have a token.");
     return res.status(403).json({ error: 'You are not signed in.' });
@@ -54,7 +64,7 @@ const verifyToken = (req, res, next) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     req.user = decoded;
-    securityLogMessage("Valid token");
+    // valid token print 
     next();
   });
 };

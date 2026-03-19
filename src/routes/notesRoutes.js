@@ -94,7 +94,8 @@ router.get("/notes/get", verifyToken, async (req, res) => {
         title: note.title,
         content: note.content,
         visibility: note.visibility,
-        tags: parsedTags
+        tags: parsedTags,
+        file: note.file
       };
     });
 
@@ -109,6 +110,46 @@ router.get("/notes/get", verifyToken, async (req, res) => {
   }
 });
 
+// **
+// Gets all public notes from all users.
+// **
+router.get("/notes/public", async (req, res) => {
+  try {
+    const noteRepo = AppDataSource.getRepository("Note");
+    const notes = await noteRepo.find({
+      where: { visibility: false },
+      relations: ["author"],
+      order: { id: "DESC" }
+    });
+
+    const formattedNotes = notes.map(note => {
+      let parsedTags = [];
+      try {
+        parsedTags = JSON.parse(note.tags);
+        if (!Array.isArray(parsedTags)) {
+          parsedTags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+        }
+      } catch (e) {
+        parsedTags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+      }
+      return {
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        visibility: note.visibility,
+        tags: parsedTags,
+        file: note.file,
+        author: note.author ? note.author.username : 'Unknown'
+      };
+    });
+
+    res.status(200).json({ notes: formattedNotes });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Internal error" });
+  }
+});
+
 
 // **
 // Gets a note by it's ID. This is different than /notes/get as this is the full note that can be opened.
@@ -117,25 +158,42 @@ router.get("/notes/get", verifyToken, async (req, res) => {
 // **
 router.get("/notes/:id", async (req, res) => {
   const noteId = req.params.id;
+  const token = req.headers['authorization'] || req.cookies.token || req.query.token;
   try {
     const noteRepo = AppDataSource.getRepository("Note");
+    const userRepo = AppDataSource.getRepository("User");
     const note = await noteRepo.findOneBy({ id: noteId });
+
     if (!note) {
       return res.status(404).json({ message: "Note not found." });
     }
 
-    //   if (note.userId != userId) {
-    //    console.log(userId)
-    //   return res.status(403).json({ message: "You do not have access to this note." });
-    // }
+    if (note.visibility == true) {
+      if (!token) {
+        notesLogMessage(`[Notes] Unauthorized access attempt to private note #${noteId} (No token)`);
+        return res.status(403).json({ message: "You do not have access to this private note." });
+      }
+
+      try {
+        const decoded = jwt.verify(token, 'secret');
+        const user = await userRepo.findOneBy({ email: decoded.email });
+
+        if (!user || user.id != note.userId) {
+          notesLogMessage(`[Notes] User ${decoded.email} tried to access a private note belonging to UserID ${note.userId}`);
+          return res.status(403).json({ message: "You do not have access to this private note." });
+        }
+      } catch (err) {
+        return res.status(401).json({ message: "Invalid or expired session." });
+      }
+    }
 
     try {
       note.tags = JSON.parse(note.tags);
       if (!Array.isArray(note.tags)) {
-        note.tags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+        note.tags = note.tags ? [{ text: note.tags, color: "#570df8bb" }] : [];
       }
     } catch (e) {
-      note.tags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+      note.tags = note.tags ? [{ text: note.tags, color: "#570df8bb" }] : [];
     }
 
     res.render('note', { note });
