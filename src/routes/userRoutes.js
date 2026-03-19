@@ -76,7 +76,6 @@ router.post('/users/accountrecovery', async (req, res) => {
     const userRepo = AppDataSource.getRepository("User");
     const user = await userRepo.findOneBy({ email: email });
 
-    // Could just add better handling but not now
     if (!user) {
         return res.status(401).json({ error: 'This email has not been registered.' });
     }

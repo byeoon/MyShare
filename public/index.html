@@ -60,45 +60,40 @@
       </h1>
       <p class="py-6" data-aos="fade-down" data-aos-delay="0" data-aos-duration="1000" data-aos-once="true">
         MyShare allows you to send files, notes, and media across devices
-        and let them decay after a period of time.
+        with a tagging system and note decaying.
       </p>
-      <button class="btn btn-primary font-bold px-12" onclick="location.href='/register.html';">
-        Get Started
+      <button class="btn btn-primary font-bold px-8 " onclick="location.href='/register.html';">
+        Register Now!
       </button>
       <br>
-      <div class="mt-10 p-6 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg">
-        <h3 class="text-2xl font-semibold mb-4">Statistics</h3>
-        <div class="flex justify-center space-x-8">
+      <div class="mt-10 p-6 bg-gray-800 rounded-lg shadow-2xl border-2xl border-primary border-4">
+        <h3 class="text-2xl font-semibold mb-2">Instance Statistics</h3>
+        <div class="flex justify-center space-x-4">
           <div class="stat">
             <div class="stat-value" id="totalUserValue">0</div>
-            <div class="stat-title text-primary-content text-sm">Total Users</div>
+            <div class="stat-title text-primary-content text-sm font-bold">Total Users</div>
           </div>
           <div class="stat">
             <div class="stat-value" id="totalNotesValue">0</div>
-            <div class="stat-title text-primary-content text-sm"> Total Uploads</div>
+            <div class="stat-title text-primary-content text-sm font-bold"> Total Uploads</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="hero bg-base-100 min-h-screen">
-  <div class="hero-content flex-col lg:flex-row">
-    <div>
-      <h1 class="text-5xl font-bold">Copy anywhere.</h1>
-      <p class="py-4">
-        MyShare is an open source clipboard service that you can use across
-        devices.
-      </p>
-      <p class="py-1">Some of our features that stand out are:
-        <li>Automatically decay files after a certain time</li>
-        <li>Built-in labeling and tagging system</li>
-        <li>Uploaded files have native Discord embed support</li>
-        <li>Easily deploayable for self-hosting</li>
-      </p>
-      <br>
-      <button class="btn btn-neutral px-10">Learn More</button>
-    </div>
+<div class="hero bg-base-200 min-h-[40vh] text-center">
+  <div>
+    <h1 class="text-5xl font-bold">Copy anything, anywhere.</h1> <br>
+    <p class="py-4 font-semibold">Some of our features that stand out are:
+      <li>Decay notes after a certain time</li>
+      <li>Built-in labeling and tagging system</li>
+      <li>Multi platform accessibility</li>
+      <li>Discord embed support</li>
+      <li>Easily deploayable for self-hosting</li>
+    </p>
+    <br>
+    <button class="btn btn-neutral px-10">Learn More</button>
   </div>
 </div>
 <footer class="footer footer-horizontal footer-center bg-base-300 text-base-content rounded p-10">
@@ -141,7 +136,6 @@
       });
       if (!response.ok) {
         document.getElementById("dd-login").style.display = "block";
-        document.getElementById("dd-profile").style.display = "none";
         document.getElementById("dd-logout").style.display = "none";
         document.getElementById("dd-dashboard").style.display = "none";
       } else {
@@ -150,7 +144,6 @@
       }
     } catch (error) {
       document.getElementById("dd-login").style.display = "block";
-      document.getElementById("dd-profile").style.display = "none";
       document.getElementById("dd-logout").style.display = "none";
       document.getElementById("dd-dashboard").style.display = "none";
     }
