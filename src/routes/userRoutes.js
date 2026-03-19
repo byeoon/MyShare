@@ -71,6 +71,24 @@ router.post('/users/login', async (req, res) => {
     securityLogMessage("New user signed in with token: " + token);
 })
 
+// **
+// Gets the current host registration status.
+// **
+router.get("/getregistrationstatus", async (req, res) => {
+    try {
+        if (process.env.ALLOW_REGISTERING == "false") {
+            return res.status(400).json({ message: "Registering is not allowed. Please contact the site administrator for more information." });
+        }
+        res.status(200).json({ message: "Registration is allowed." });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "internal error" })
+    }
+})
+
+// **
+// I have not worked on this yet
+// **
 router.post('/users/accountrecovery', async (req, res) => {
     const { email } = req.body;
     const userRepo = AppDataSource.getRepository("User");

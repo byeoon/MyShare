@@ -65,6 +65,23 @@
 
 <script>
 
+  async function getRegistrationStatus() {
+    try {
+      const response = await fetch('/api/getregistrationstatus', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        window.location.href = "/login.html";
+      }
+    } catch (error) {
+      console.log("Error checking registration status")
+    }
+  }
+  getRegistrationStatus();
+
   async function postToServer() {
     const email = document.getElementById('email').value;
     const username = document.getElementById('username').value;

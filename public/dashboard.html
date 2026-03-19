@@ -49,12 +49,12 @@
   <div class="drawer-content flex flex-col items-center justify-center">
     <h1 class="font-bold text-xl p-8">Your Notes</h1><br>
 
-    <!-- MyShare Modal-->
     <input type="checkbox" id="my_modal_6" class="modal-toggle" />
     <div class="modal" role="dialog">
       <div class="modal-box space-y-3 shadow-2xl border border-primary max-w-xl">
         <h2 class="text-lg font-bold">Create a Note</h2>
         <p>Upload a note with text/image below. You can add priority tags, deletion time, and visibility.</p>
+        <label class="label text-xs font-bold">Note</label> <br>
         <input type="text" id="shareInput_title" placeholder="Title" class="input w-full max-w-xs" />
         <textarea class="textarea w-full max-w-xs" id="shareInput_content" placeholder="Content"></textarea>
         <br>
@@ -67,7 +67,7 @@
         <div id="tagBuilder" class="space-y-2">
           <label class="label text-xs font-bold">Tags</label>
           <div class="flex gap-2">
-            <input type="text" id="tagInput_text" placeholder="Tag Name" class="input input-bordered input-sm w-full" />
+            <input type="text" id="tagInput_text" placeholder="Tag Name" class="input input-bordered input-sm w-32" />
             <input type="color" id="tagInput_color" value="#570df8"
               class="input input-bordered input-sm w-12 h-8 p-0" />
             <button type="button" class="btn btn-sm btn-primary" onclick="addTag()">Add</button>
@@ -75,7 +75,7 @@
           <div id="tagList" class="flex flex-wrap gap-2 min-h-[1.5rem]"></div>
         </div> <br>
 
-        <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this Note private?
+        <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this note private?
         <div class="modal-action">
           <label for="my_modal_6" class="btn">Cancel</label>
           <label for="my_modal_6" class="btn bg-success text-white" onClick="saveShare()">Save</label>
@@ -93,10 +93,10 @@
     <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
       <h3 id="hellousername" class="text-lg font-bold p-2">Hello, {undefined}</h3>
       <label for="my_modal_6" class="btn bg-primary text-white">Create a Note</label>
-      <li class=""></li> <!--Divider-->
+      <li class=""></li>
       <li><a>Upload Settings (WIP)</a></li>
       <li><a>Embed Configuration (WIP)</a></li>
-      <li class=""></li> <!--Divider-->
+      <li class=""></li>
       <li><a class="text-red-400 cursor-pointer" id="deleteMode">Manage Notes</a></li>
     </ul>
   </div>

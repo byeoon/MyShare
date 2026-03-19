@@ -34,7 +34,6 @@
       </div>
       <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
-        <li> <a id="dd-profile" class="justify-between">Profile</a> </li>
         <li><a id="dd-dashboard" href="/dashboard.html">Dashboard</a></li>
         <li><a id="dd-logout" onClick="logout()">Logout</a></li>
         <div class="divider m-0"></div>
@@ -62,7 +61,7 @@
         MyShare allows you to send files, notes, and media across devices
         with a tagging system and note decaying.
       </p>
-      <button class="btn btn-primary font-bold px-8 " onclick="location.href='/register.html';">
+      <button id="register-btn" class="btn btn-primary font-bold px-8 " onclick="location.href='/register.html';">
         Register Now!
       </button>
       <br>
@@ -125,6 +124,24 @@
     document.getElementById("bg").style.backgroundImage = `url("${images[choose]}")`;
   };
 
+  async function getRegistrationStatus() {
+    try {
+      const response = await fetch('/api/getregistrationstatus', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        window.location.href = "/login.html";
+      } else {
+        // do nothing
+      }
+    } catch (error) {
+      console.log("Error checking registration status")
+    }
+  }
+
   async function isLoggedIn() {
     try {
       const response = await fetch('/api/email', {
@@ -149,6 +166,7 @@
     }
   }
   isLoggedIn();
+  getRegistrationStatus();
 
   function logout() {
     localStorage.removeItem("token");

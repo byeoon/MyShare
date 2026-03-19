@@ -61,10 +61,14 @@
       <button class="btn btn-primary mt-4" style="padding: 20px;" id="login" type="submit" onClick="postToServer()">
         Login
       </button>
-      <div class="divider"></div>
-      <p2 class="text-center">Don't have an account?
-        <a class="link" href="/register.html">Register!</a>
-      </p2>
+      <div id="registerDiv">
+        <div class="divider"></div>
+        <center>
+          <p2 class="text-center">Don't have an account?
+            <a class="link" href="/register.html">Register!</a>
+        </center>
+        </p2>
+      </div>
       <p2 class="text-center"><a class="link" href="/recovery.html">Forgot credentials?</a></p2>
     </div>
   </div>
@@ -80,6 +84,25 @@
       document.getElementById("login").click();
     }
   });
+
+  async function getRegistrationStatus() {
+    try {
+      const response = await fetch('/api/getregistrationstatus', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (!response.ok) {
+        document.getElementById("registerDiv").style.display = "none";
+      } else {
+        // do nothing
+      }
+    } catch (error) {
+      console.log("Error checking registration status")
+    }
+  }
+  getRegistrationStatus();
 
   async function postToServer() {
     const email = document.getElementById("email").value;

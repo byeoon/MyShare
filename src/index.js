@@ -39,6 +39,9 @@ AppDataSource.initialize().then(() => {
   coreLogMessage("Error while initializing server: ", error.message)
 })
 
+// **
+// Verifies user token, security measure.
+// **
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'];
   if (!token) {
@@ -56,6 +59,10 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+// **
+// This gets user information from the email.
+// !! CURRENTLY INSECURE, THIS CAN BE CALLED BY ANY USER?!
+// **
 app.get('/api/email', verifyToken, async (req, res) => {
   try {
     const user = await userRepo.findOneBy({ email: req.user.email });
@@ -72,6 +79,10 @@ app.get('/api/email', verifyToken, async (req, res) => {
   }
 });
 
+// **
+// Uploads a file.
+// !! BIG POTENTIAL SECURITY WARNING - NEEDS FIXING!!!
+// **
 app.post("/api/upload", upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
@@ -80,6 +91,9 @@ app.post("/api/upload", upload.single('file'), async (req, res) => {
   res.json({ filename: req.file.filename });
 })
 
+// **
+// Error page fallbacks.
+// **
 app.use((req, res, next) => {
   res.status(404).render('404', { message: 'Page Not Found' });
 });
