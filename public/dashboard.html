@@ -64,7 +64,16 @@
           <label class="fieldset-label">Max size: 1GB (Not enforced yet)</label>
           <input type="text" id="shareInput_file" placeholder="Image URL" class="input w-full max-w-xs" />
         </fieldset>
-        <input type="text" id="shareInput_tags" placeholder="Tag" class="input w-full max-w-xs" /> <br>
+        <div id="tagBuilder" class="space-y-2">
+          <label class="label text-xs font-bold">Tags</label>
+          <div class="flex gap-2">
+            <input type="text" id="tagInput_text" placeholder="Tag Name" class="input input-bordered input-sm w-full" />
+            <input type="color" id="tagInput_color" value="#570df8"
+              class="input input-bordered input-sm w-12 h-8 p-0" />
+            <button type="button" class="btn btn-sm btn-primary" onclick="addTag()">Add</button>
+          </div>
+          <div id="tagList" class="flex flex-wrap gap-2 min-h-[1.5rem]"></div>
+        </div> <br>
 
         <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this Note private?
         <div class="modal-action">
@@ -127,6 +136,47 @@
       window.location.replace("/login.html");
     }
   }
+  let currentTags = [];
+
+  function tagBadgeColorGet(hexcolor) {
+    hexcolor = hexcolor.replace("#", "");
+    var r = parseInt(hexcolor.substr(0, 2), 16);
+    var g = parseInt(hexcolor.substr(2, 2), 16);
+    var b = parseInt(hexcolor.substr(4, 2), 16);
+    var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? 'black' : 'white';
+  }
+
+
+  function addTag() {
+    const text = document.getElementById("tagInput_text").value.trim();
+    const color = document.getElementById("tagInput_color").value;
+    if (text === "") return;
+
+    currentTags.push({ text, color });
+    document.getElementById("tagInput_text").value = "";
+    renderTagList();
+  }
+
+  function removeTag(index) {
+    currentTags.splice(index, 1);
+    renderTagList();
+  }
+
+  function renderTagList() {
+    const tagList = document.getElementById("tagList");
+    tagList.innerHTML = "";
+    currentTags.forEach((tag, index) => {
+      const tagBadge = document.createElement("div");
+      tagBadge.className = "badge badge-primary gap-2 p-3";
+      tagBadge.style.backgroundColor = tag.color;
+      tagBadge.style.borderColor = tag.color;
+      tagBadge.style.color = tagBadgeColorGet(tag.color);
+      tagBadge.innerHTML = `${tag.text} <button type="button" class="btn btn-ghost btn-xs h-4 w-4 min-h-0 p-0" onclick="removeTag(${index})">✕</button>`;
+      tagList.appendChild(tagBadge);
+    });
+  }
+
   isLoggedIn();
 
   async function saveShare() {
@@ -134,7 +184,7 @@
     let title = document.getElementById("shareInput_title").value;
     let file = document.getElementById("shareInput_file").value;
     let fileUploaded = document.getElementById("shareInput_fileUpload").files[0];
-    let tags = document.getElementById("shareInput_tags").value; // subject to change
+    let tags = currentTags;
     let visible = document.getElementById("shareInput_visibility").checked;
 
 
@@ -182,6 +232,8 @@
         window.location.replace("/login.html");
       }
       const responseData = await response.json();
+      currentTags = [];
+      renderTagList();
       loadShares();
     } catch (error) {
       console.error('err:', error);
@@ -208,9 +260,14 @@
 
       responseData.notes.forEach(note => {
         const smallnote = note.content.length > 60 ? note.content.substring(0, 80) + '....' : note.content;
-        const tags = `
-         <div class="badge badge-outline">${note.tags}</div>
-         `
+        let tagsHtml = '';
+        if (Array.isArray(note.tags)) {
+          note.tags.forEach(tag => {
+            const fontColor = tagBadgeColorGet(tag.color);
+            tagsHtml += `<div class="badge border-none hover:scale-105 transition-transform cursor-default" style="background-color: ${tag.color}; color: ${fontColor}">${tag.text}</div>`;
+          });
+        }
+
         const content = `
                 <div class="card bg-base-300 w-96 shadow-2xl card-border border-[#141414] border-4">
                     <div class="card-body">
@@ -219,7 +276,7 @@
                         </h1>
                         <p id="note-content" class="multiline break-words">${smallnote}</p>
                         <div id="badges" class="card-actions justify-end">
-                            ${tags}
+                            ${tagsHtml}
                         </div>   
                         <a class="btn btn-lg font-bold" onClick="viewNote(${note.id})">View</a>
                         <a class="btn btn-md" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
@@ -280,7 +337,6 @@
     window.location.href = "/";
   }
 
-  // Toggle delete buttons visibility
   document.getElementById("deleteMode").addEventListener("click", function () {
     const deleteBtns = document.querySelectorAll(".delete-btn");
     deleteBtns.forEach(btn => {

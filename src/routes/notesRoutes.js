@@ -33,7 +33,8 @@ router.post("/notes/create", verifyToken, async (req, res) => {
   let { title, content, file, tags, visibility } = req.body;
   try {
     const noteRepo = AppDataSource.getRepository("Note");
-    const note = noteRepo.create({ userId, title, content, file, tags, visibility });
+    const serializedTags = typeof tags === 'object' ? JSON.stringify(tags) : tags;
+    const note = noteRepo.create({ userId, title, content, file, tags: serializedTags, visibility });
     const newNote = await noteRepo.save(note);
 
     res.status(201).json({ message: "Note created successfully!", note: newNote });
@@ -78,13 +79,24 @@ router.get("/notes/get", verifyToken, async (req, res) => {
   try {
     const noteRepo = AppDataSource.getRepository("Note");
     const [notes, count] = await noteRepo.findAndCountBy({ userId: userId });
-    const formattedNotes = notes.map(note => ({
-      id: note.id,
-      title: note.title,
-      content: note.content,
-      visibility: note.visibility,
-      tags: note.tags
-    }));
+    const formattedNotes = notes.map(note => {
+      let parsedTags = [];
+      try {
+        parsedTags = JSON.parse(note.tags);
+        if (!Array.isArray(parsedTags)) {
+          parsedTags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+        }
+      } catch (e) {
+        parsedTags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+      }
+      return {
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        visibility: note.visibility,
+        tags: parsedTags
+      };
+    });
 
     res.status(200).json({
       userId: userId,
@@ -116,6 +128,15 @@ router.get("/notes/:id", async (req, res) => {
     //    console.log(userId)
     //   return res.status(403).json({ message: "You do not have access to this note." });
     // }
+
+    try {
+      note.tags = JSON.parse(note.tags);
+      if (!Array.isArray(note.tags)) {
+        note.tags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+      }
+    } catch (e) {
+      note.tags = note.tags ? [{ text: note.tags, color: "#570df8" }] : [];
+    }
 
     res.render('note', { note });
   } catch (error) {

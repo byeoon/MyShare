@@ -5,7 +5,10 @@ services:
       - "3010:3010"
     env_file: .env
     environment:
+      - NODE_ENV=production
       - DB_HOST=db
+    volumes:
+      - ./uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy

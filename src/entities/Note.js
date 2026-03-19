@@ -22,7 +22,7 @@ module.exports = new EntitySchema({
             type: "varchar"
         },
         tags: {
-            type: "simple-array",
+            type: "text",
             nullable: true
         },
         visibility: {
