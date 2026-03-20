@@ -34,7 +34,16 @@ router.post("/notes/create", verifyToken, async (req, res) => {
   try {
     const noteRepo = AppDataSource.getRepository("Note");
     const serializedTags = typeof tags === 'object' ? JSON.stringify(tags) : tags;
+
     const note = noteRepo.create({ userId, title, content, file, tags: serializedTags, visibility });
+    if (note.title.length > 32) {
+      return res.status(400).json({ message: "Title exceeds maximum length of 32 characters." });
+    }
+
+    if (note.content.length > 2000) {
+      return res.status(400).json({ message: "Content exceeds maximum length of 2000 characters." });
+    }
+
     const newNote = await noteRepo.save(note);
 
     res.status(201).json({ message: "Note created successfully!", note: newNote });

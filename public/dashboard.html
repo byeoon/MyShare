@@ -24,10 +24,8 @@
     </ul>
     <div class="dropdown dropdown-end">
       <label for="my-drawer-2" class="lg:hidden btn btn-primary drawer-button">Open Sidebar</label>
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-        <div class="w-14 rounded-full">
-          <img src="/img/default.png" />
-        </div>
+      <div tabindex="0" role="button" class="btn btn-ghost">
+        <h3 id="username">User</h3>
       </div>
       <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
@@ -63,8 +61,10 @@
         <h2 class="text-lg font-bold">Create a Note</h2>
         <p>Upload a note with text/image below. You can add priority tags, deletion time, and visibility.</p>
         <label class="label text-xs font-bold">Note</label> <br>
-        <input type="text" id="shareInput_title" placeholder="Title" class="input w-full max-w-xs" />
-        <textarea class="textarea w-full max-w-xs" id="shareInput_content" placeholder="Content"></textarea>
+        <input type="text" id="shareInput_title" placeholder="Title" class="input w-full max-w-xs" maxlength="32"
+          required />
+        <textarea class="textarea w-full max-w-xs" id="shareInput_content" placeholder="Content" maxlength="2000"
+          required> </textarea>
         <br>
         <fieldset class="fieldset">
           <legend class="fieldset-legend">Upload a file</legend>
@@ -136,7 +136,6 @@
 
 </html>
 <script>
-
   async function isLoggedIn() {
     try {
       const response = await fetch('/api/email', {
@@ -157,6 +156,7 @@
 
       const responseData = await response.json();
       document.getElementById("hellousername").innerHTML = `Hello, ${responseData.username}`;
+      document.getElementById("username").innerHTML = `${responseData.username}`;
       localStorage.setItem("userId", responseData.userId);
       document.getElementById("dd-login").style.display = "none";
 
@@ -259,9 +259,8 @@
         body: JSON.stringify(userData)
       });
       if (!response.ok) {
-        throw new Error('You are not signed in!');
-        console.log(err);
-        window.location.replace("/login.html");
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'There was an error with creating your note.');
       }
       const responseData = await response.json();
       currentTags = [];
