@@ -16,6 +16,39 @@
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/css/aos.css" />
+  <style>
+    #bg {
+      --mouse-x: 50%;
+      --mouse-y: 50%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        600px at var(--mouse-x) var(--mouse-y),
+        rgba(80, 140, 255, 0.5),
+        transparent 80%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #bg > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .dropdown .dropdown-content {
+      z-index: 9999 !important;
+    }
+  </style>
 </head>
 
 <div class="navbar bg-base-100 shadow-sm">
@@ -23,9 +56,6 @@
     <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
   </div>
   <div class="navbar-end">
-    <ul class="menu menu-horizontal px-1">
-      <li><a onclick="location.href='/download.html';">Download</a></li>
-    </ul>
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="w-14 rounded-full">
@@ -84,13 +114,13 @@
 <div class="hero bg-base-200 min-h-[40vh] text-center">
   <div>
     <h1 class="text-5xl font-bold">Copy anything, anywhere.</h1> <br>
-    <p class="py-4 font-semibold">Some of our features that stand out are:
+    <p class="py-4 font-semibold">Some of our features that stand out are:</p>
       <li>Decay notes after a certain time</li>
       <li>Built-in labeling and tagging system</li>
       <li>Multi platform accessibility</li>
       <li>Discord embed support</li>
       <li>Easily deploayable for self-hosting</li>
-    </p>
+   
     <br>
     <button class="btn btn-neutral px-10">Learn More</button>
   </div>
@@ -113,16 +143,6 @@
     document.getElementById("totalUserValue").innerHTML = data.totalUsers;
     document.getElementById("totalNotesValue").innerHTML = data.totalNotes;
   });
-
-  window.onload = function () {
-    const images = [
-      "/img/background.png",
-      "/img/background2.png",
-      "/img/background3.png"
-    ];
-    var choose = Math.floor(Math.random() * images.length);
-    document.getElementById("bg").style.backgroundImage = `url("${images[choose]}")`;
-  };
 
   async function getRegistrationStatus() {
     try {
@@ -173,4 +193,13 @@
     localStorage.removeItem("userId");
     window.location.href = "/";
   }
+
+  const bg = document.getElementById('bg');
+  bg.addEventListener('mousemove', (e) => {
+    const rect = bg.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    bg.style.setProperty('--mouse-x', `${x}px`);
+    bg.style.setProperty('--mouse-y', `${y}px`);
+  });
 </script>
