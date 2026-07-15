@@ -44,11 +44,3 @@ If you followed everything properly then congrats! MyShare will be accessible on
 
 ### CSS Not Refreshing
 If you are having issues with the tailwindcss configuration, try running `npm run build-css` to rebuild it.
-
-
-## TODO List
-- [x] Label/Tagging functionality
-- [x] File uploading
-- [x] Host-independent frontend
-- [ ] Finalize UI/UX polish
-- [ ] Advanced security implementations

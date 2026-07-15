@@ -10,31 +10,6 @@
   <link href="/css/app.css" rel="stylesheet">
 </head>
 
-<div class="navbar bg-base-100 shadow-sm">
-  <div class="navbar-start">
-    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
-  </div>
-  <div class="navbar-end">
-    <div class="dropdown dropdown-end">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-        <div class="w-14 rounded-full">
-          <img src="/img/default.png" />
-        </div>
-      </div>
-      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
-        <li><a id="dd-dashboard" href="/dashboard.html">Dashboard</a></li>
-        <li><a id="dd-logout" onClick="logout()">Logout</a></li>
-        <div class="divider m-0"></div>
-        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
-          aria-label="Dark" value="default" />
-        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
-          aria-label="Light" value="light" />
-      </ul>
-    </div>
-  </div>
-</div>
-
 <div class="hero bg-base-100 min-h-screen">
   <div class="hero-content flex-col lg:flex-row">
     <div>
@@ -44,7 +19,7 @@
         You do not have permission or authorization to access this file or directory.
       </p>
       <br>
-      <center> <a href="/"><button class="btn btn-neutral px-10">Go Home</button> </a></center>
+      <center> <a href="/dashboard.html"><button class="btn btn-neutral px-10">Go to Dashboard</button> </a></center>
     </div>
   </div>
 </div>
@@ -52,29 +27,6 @@
 </html>
 
 <script>
-  async function isLoggedIn() {
-    try {
-      const response = await fetch('/api/email', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': localStorage.getItem("token")
-        }
-      });
-      if (response.ok) {
-        document.getElementById("dd-login").style.display = "none";
-      } else {
-        document.getElementById("dd-login").style.display = "block";
-        document.getElementById("dd-logout").style.display = "none";
-        document.getElementById("dd-dashboard").style.display = "none";
-      }
-    } catch (error) {
-      document.getElementById("dd-login").style.display = "block";
-      document.getElementById("dd-logout").style.display = "none";
-      document.getElementById("dd-dashboard").style.display = "none";
-    }
-  }
-  isLoggedIn();
 
   function logout() {
     localStorage.removeItem("token");

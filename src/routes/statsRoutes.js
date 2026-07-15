@@ -4,7 +4,7 @@ const AppDataSource = require('../database')
 const router = express.Router();
 
 // **
-// Gets the total number of users and notes. This is used on the main page.
+// Gets the total number of users and notes. This is used on the login page.
 // **
 router.get("/stats", async (req, res) => {
     try {

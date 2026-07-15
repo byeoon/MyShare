@@ -40,7 +40,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '..', 'public', 'login.html'));
 });
 
 AppDataSource.initialize().then(() => {
@@ -48,6 +48,20 @@ AppDataSource.initialize().then(() => {
 }).catch((error) => {
   coreLogMessage("Error while initializing server: ", error.message)
 })
+
+
+// **
+// Gets the current version hash from GitHub
+// **
+app.get('/api/version', async (req, res) => {
+  try {
+    const ghRes = await fetch('https://api.github.com/repos/byeoon/MyShare/commits/main', { headers: { 'User-Agent': 'MyShare' } });
+    const data = await ghRes.json();
+    res.json({ commit: data.sha?.slice(0, 7) || 'dev' });
+  } catch (e) {
+    res.json({ commit: 'dev' });
+  }
+});
 
 // **
 // Verifies user token, security measure.
@@ -58,23 +72,24 @@ const verifyToken = (req, res, next) => {
     securityLogMessage("User does not have a token.");
     return res.status(403).json({ error: 'You are not signed in.' });
   }
-  jwt.verify(token, 'secret', (err, decoded) => {
-    if (err) {
-      securityLogMessage("User has invalid token.");
+  const secret = process.env.JWT_SECRET || 'secret';
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err || !decoded || !decoded.email) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     req.user = decoded;
-    // valid token print 
     next();
   });
 };
 
 // **
-// This gets user information from the email.
-// !! CURRENTLY INSECURE, THIS CAN BE CALLED BY ANY USER?!
+// Returns the currently authenticated user's profile information.
 // **
 app.get('/api/email', verifyToken, async (req, res) => {
   try {
+    if (!req.user || !req.user.email) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     const user = await userRepo.findOneBy({ email: req.user.email });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });

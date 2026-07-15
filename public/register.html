@@ -9,50 +9,43 @@
   <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
 </head>
 
-<div class="navbar bg-base-100 shadow-sm">
-  <div class="navbar-start">
-    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
+<div class="hero bg-base-200 min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"
+  id="bg">
+  <div class="pointer-events-none absolute inset-0 opacity-75 transition-opacity duration-300 z-0"
+    style="background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(30, 33, 189, 0.22), transparent 60%);">
   </div>
-  <div class="navbar-end">
-    <div class="dropdown dropdown-end">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-        <div class="w-14 rounded-full">
-          <img src="/img/default.png" />
+
+  <div class="flex flex-col gap-4 items-center relative z-10">
+    <div class="card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-96 shadow-xl">
+      <div class="card-body">
+        <div class="container" style="
+              display: grid;
+              align-items: center;
+              grid-template-columns: 1fr 1fr 1fr;
+              column-gap: 2px;
+              padding: 8px;
+            ">
+          <img src="/img/myshare_white.png" style="height: 64px; width: 64px" />
+          <h2 class="text-2xl font-bold py-2">Register</h2>
         </div>
+
+        <input id="email" type="email" placeholder="Email"
+          class="input validator input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm" />
+        <input id="username" placeholder="Username"
+          class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm" />
+        <input id="pw" type="password" placeholder="Password"
+          class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm" />
+
+        <label class="fieldset-label flex items-center gap-2 cursor-pointer mt-2 text-sm text-base-content/80">
+          <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" id="tosCheckbox" />
+          I agree to MyShare's TOS
+        </label>
+
+        <button class="btn btn-primary mt-4 shadow-lg shadow-primary/20" style="padding: 20px;" id="register"
+          onClick="postToServer()">Create Account</button>
+        <div class="divider"></div>
+        <p2 class="text-center">Already have an account? <a class="link" href="/login.html">Login!</a></p2>
       </div>
-      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
-        <div class="divider m-0"></div>
-        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
-          aria-label="Dark" value="default" />
-        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
-          aria-label="Light" value="light" />
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div class="hero bg-base-200 min-h-screen">
-  <div class="card card-border bg-base-300 w-80 shadow-xl border-base-100">
-    <div class="card-body">
-      <div class="container"
-        style="display: grid;align-items: center; grid-template-columns: 1fr 1fr 1fr;column-gap: 2px; padding: 8px;">
-        <img src="/img/myshare_white.png" style="height: 64px; width: 64px;">
-        <h2 class="text-2xl font-bold py-2">Register</h2>
-      </div>
-
-      <input id="email" type="email" placeholder="Email" class="input validator input-bordered p-4" />
-      <input id="username" placeholder="Username" class="input input-bordered p-4 mt-2" />
-      <input id="pw" type="password" placeholder="Password" class="input input-bordered p-4 mt-2" />
-
-      <label class="fieldset-label">
-        <input type="checkbox" class="checkbox my-4" id="tosCheckbox" />
-        You have read & agreed to our TOS
-      </label>
-      </label>
-      <button class="btn btn-primary" id="register" onClick="postToServer()">Create Account</button>
-      <div class="divider"></div>
-      <p2 class="text-center text-1xl">Already have an account? <a class="link" href="/login.html">Login!</a></p2>
     </div>
   </div>
 </div>
@@ -60,6 +53,26 @@
 </html>
 
 <script>
+  const bg = document.getElementById('bg');
+  if (bg) {
+    bg.addEventListener('mousemove', (e) => {
+      const rect = bg.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      bg.style.setProperty('--mouse-x', `${x}px`);
+      bg.style.setProperty('--mouse-y', `${y}px`);
+    });
+  }
+
+  var input = document.getElementById("pw");
+  if (input) {
+    input.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("register").click();
+      }
+    });
+  }
 
   async function getRegistrationStatus() {
     try {

@@ -10,8 +10,9 @@ const verifyToken = (req, res, next) => {
     notesLogMessage("[Notes] User does not have a token.");
     return res.status(403).json({ error: 'You are not signed in.' });
   }
-  jwt.verify(token, 'secret', (err, decoded) => {
-    if (err) {
+  const secret = process.env.JWT_SECRET || 'secret';
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err || !decoded || !decoded.email) {
       notesLogMessage("User has invalid token.");
       return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -184,7 +185,8 @@ router.get("/notes/:id", async (req, res) => {
       }
 
       try {
-        const decoded = jwt.verify(token, 'secret');
+        const secret = process.env.JWT_SECRET || 'secret';
+        const decoded = jwt.verify(token, secret);
         const user = await userRepo.findOneBy({ email: decoded.email });
 
         if (!user || user.id != note.userId) {

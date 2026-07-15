@@ -18,31 +18,6 @@ async function getRegistrationStatus() {
     }
 }
 
-async function isLoggedIn() {
-    try {
-        const response = await fetch('/api/email', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem("token")
-            }
-        });
-        if (!response.ok) {
-            document.getElementById("dd-login").style.display = "block";
-            document.getElementById("dd-logout").style.display = "none";
-            document.getElementById("dd-dashboard").style.display = "none";
-        } else {
-            document.getElementById("dd-dashboard").style.display = "block";
-            document.getElementById("dd-login").style.display = "none";
-        }
-    } catch (error) {
-        document.getElementById("dd-login").style.display = "block";
-        document.getElementById("dd-logout").style.display = "none";
-        document.getElementById("dd-dashboard").style.display = "none";
-    }
-}
-
 module.exports = {
-    getRegistrationStatus,
-    isLoggedIn
+    getRegistrationStatus
 }

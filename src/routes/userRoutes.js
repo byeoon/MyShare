@@ -37,7 +37,8 @@ router.post("/users", async (req, res) => {
 
         const user = userRepo.create({ username, email, password });
         const newuser = await userRepo.save(user);
-        const userToken = jwt.sign({ email: user.email }, 'secret');
+        const secret = process.env.JWT_SECRET || 'secret';
+        const userToken = jwt.sign({ email: user.email }, secret);
 
         res.cookie('token', userToken, { httpOnly: false, secure: false, maxAge: 3600000 * 24 * 7 }); // 7 days
         res.status(201).json({ message: "User created.", user: newuser, token: userToken })
@@ -67,10 +68,11 @@ router.post('/users/login', async (req, res) => {
         return res.status(401).json({ error: 'Invalid password!' });
     }
 
-    const token = jwt.sign({ email: user.email }, 'secret');
+    const secret = process.env.JWT_SECRET || 'secret';
+    const token = jwt.sign({ email: user.email }, secret);
     res.cookie('token', token, { httpOnly: false, secure: false, maxAge: 3600000 * 24 * 7 }); // 7 days
     res.json({ token });
-    securityLogMessage("New user signed in with token: " + token);
+    securityLogMessage("New user signed in");
 })
 
 // **

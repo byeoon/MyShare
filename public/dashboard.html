@@ -14,30 +14,6 @@
   </style>
 </head>
 
-<div class="navbar bg-base-100 shadow-sm">
-  <div class="navbar-start">
-    <a href="/"> <img class="" src="/img/myshare_white.png" style="height: 64px; width: 64px;"> </a>
-  </div>
-  <div class="navbar-end">
-    <div class="dropdown dropdown-end">
-      <label for="my-drawer-2" class="lg:hidden btn btn-primary drawer-button">Open Sidebar</label>
-      <div tabindex="0" role="button" class="btn btn-ghost">
-        <h3 id="username">User</h3>
-      </div>
-      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li> <a href="/login.html" id="dd-login" class="justify-between">Login</a> </li>
-        <li><a id="dd-dashboard" href="/dashboard.html">Dashboard</a></li>
-        <li><a id="dd-logout" onClick="logout()">Logout</a></li>
-        <div class="divider m-0"></div>
-        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
-          aria-label="Dark" value="default" />
-        <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-ghost justify-start"
-          aria-label="Light" value="light" />
-      </ul>
-    </div>
-  </div>
-</div>
-
 
 <input type="checkbox" id="image_modal_toggle" class="modal-toggle" />
 <div class="modal" role="dialog" id="image_preview_modal">
@@ -50,7 +26,7 @@
 
 <div class="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-  <div class="drawer-content flex flex-col items-center justify-start min-h-screen pt-8">
+  <div class="drawer-content bg-base-200 flex flex-col items-center justify-start min-h-screen pt-8">
 
     <input type="checkbox" id="my_modal_6" class="modal-toggle" />
     <div class="modal" role="dialog">
@@ -90,49 +66,78 @@
     <br>
 
     <div class="tabs tabs-lifted tabs-lg w-full max-w-6xl px-4">
-      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-200)] text-lg font-bold h-16"
+      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-300)] text-lg font-bold h-16"
         aria-label="📝 Your Notes" checked="checked" />
-      <div class="tab-content bg-base-200 border-base-300 rounded-box p-10 shadow-inner">
+      <div class="tab-content bg-base-300 border-base-300 rounded-box p-10 shadow-inner">
         <div id="notes" class="flex flex-wrap gap-8 justify-center">
           <!--Notes are placed inside here-->
         </div>
       </div>
 
-      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-200)] text-lg font-bold h-16"
-        aria-label="🌐 Instance-wide" />
-      <div class="tab-content bg-base-200 border-base-300 rounded-box p-10 shadow-inner">
+      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-300)] text-lg font-bold h-16"
+        aria-label="🌐 Instance Notes" />
+      <div class="tab-content bg-base-300 border-base-300 rounded-box p-10 shadow-inner">
         <div id="public-notes" class="flex flex-wrap gap-8 justify-center">
           <!--Public notes are placed inside here-->
         </div>
       </div>
 
-      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-200)] text-lg font-bold h-16"
+      <input type="radio" name="dashboard_tabs" class="tab [--tab-bg:var(--color-base-300)] text-lg font-bold h-16"
         aria-label="⚙️ Settings" />
-      <div class="tab-content bg-base-100 border-base-300 rounded-box p-10">
-        <div class="flex flex-col items-center justify-center py-20 text-base-content/50">
-          <p class="text-xl font-bold">Settings</p>
-          <p>Configuration options will appear here.</p>
+      <div class="tab-content bg-base-300 border-base-300 rounded-box p-10 shadow-inner">
+        <div class="flex flex-col justify-between min-h-[500px] w-full">
+          <div class="flex flex-col items-center justify-center py-20 text-base-content/50 my-auto">
+            <p class="text-xl font-bold">Settings</p>
+            <p>Configuration options will appear here. Soon.</p>
+          </div>
+
+          <div
+            class="pt-6 border-t border-base-content/10 flex items-center justify-between text-xs font-mono text-base-content/50 w-full">
+            <span>Git Commit Hash</span>
+            <a id="commitBadge" href="https://github.com/byeoon/MyShare" target="_blank"
+              class="hover:text-base-content hover:underline transition-colors font-bold">loading...</a>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
   <div class="drawer-side">
     <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+    <ul
+      class="menu bg-base-200/90 backdrop-blur-2xl border-r border-base-content/10 text-base-content min-h-full w-80 p-4">
       <h3 id="hellousername" class="text-lg font-bold p-2">Hello, {undefined}</h3>
-      <label for="my_modal_6" class="btn bg-primary text-white">Create a Note</label>
+      <label for="my_modal_6" class="btn btn-primary shadow-md shadow-primary/20 font-bold">Create a Note</label>
       <li class=""></li>
-      <li><a>Upload Settings (WIP)</a></li>
-      <li><a>Embed Configuration (WIP)</a></li>
+      <li><a class="hover:bg-base-300/50 transition-colors">Upload Settings (WIP)</a></li>
+      <li><a class="hover:bg-base-300/50 transition-colors">Embed Configuration (WIP)</a></li>
       <li class=""></li>
-      <li><a class="text-red-400 cursor-pointer" id="deleteMode">Manage Notes</a></li>
+      <li><a class="text-error font-medium hover:bg-error/10 transition-colors cursor-pointer" id="deleteMode">Manage
+          Notes</a></li>
+      <li class=""></li>
+      <li><a class="text-error font-medium hover:bg-error/10 transition-colors cursor-pointer"
+          onClick="logout()">Logout</a></li>
     </ul>
   </div>
 </div>
 
 </html>
 <script>
+  async function loadVersionInfo() {
+    try {
+      const res = await fetch('/api/version');
+      if (res.ok) {
+        const data = await res.json();
+        const badge = document.getElementById("commitBadge");
+        if (badge && data.commit) {
+          badge.innerText = data.commit;
+          badge.href = `https://github.com/byeoon/MyShare/commit/${data.commit}`;
+        }
+      }
+    } catch (e) {
+      console.log("Could not load version");
+    }
+  }
+
   async function isLoggedIn() {
     try {
       const response = await fetch('/api/email', {
@@ -145,23 +150,17 @@
       if (!response.ok) {
         throw new Error('You are not authenticated!');
         console.log(err);
-        document.getElementById("dd-login").style.display = "block";
-        document.getElementById("dd-logout").style.display = "none";
-        document.getElementById("dd-dashboard").style.display = "none";
         window.location.replace("/login.html");
       }
 
       const responseData = await response.json();
       document.getElementById("hellousername").innerHTML = `Hello, ${responseData.username}`;
-      document.getElementById("username").innerHTML = `${responseData.username}`;
       localStorage.setItem("userId", responseData.userId);
-      document.getElementById("dd-login").style.display = "none";
+      loadShares();
+      loadVersionInfo();
 
     } catch (error) {
       console.log('Error while authenticating:', error);
-      document.getElementById("dd-login").style.display = "block";
-      document.getElementById("dd-logout").style.display = "none";
-      document.getElementById("dd-dashboard").style.display = "none";
       window.location.replace("/login.html");
     }
   }
@@ -298,7 +297,7 @@
         }
 
         const content = `
-                <div class="card bg-base-300 w-96 shadow-2xl card-border border-[#141414] border-4">
+                <div class="card bg-base-100/80 backdrop-blur-md w-96 shadow-xl border border-base-content/10 hover:border-primary/40 transition-colors">
                     <div class="card-body">
                         <h1 id="note-title" class="card-title text-2xl font-bold">
                             ${note.title}
@@ -332,11 +331,11 @@
             }
           })()}
                         </div>
-                        <a class="btn btn-lg font-bold" onClick="viewNote(${note.id})">View</a>
-                        <a class="btn btn-md" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
-                        <a class="delete-btn text-red-300 btn btn-sm hidden" onClick="deleteShare(${note.id})">Delete</a>
+                        <a class="btn btn-primary btn-lg font-bold shadow-md shadow-primary/20" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-neutral btn-md border border-base-content/10" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                        <a class="delete-btn btn btn-error btn-sm hidden" onClick="deleteShare(${note.id})">Delete</a>
                     </div>
-                    <div class="absolute top-2 right-2 text-sm">#${note.id}</div>
+                    <div class="absolute top-2 right-2 text-sm text-base-content/40 font-mono">#${note.id}</div>
                 </div>
             `;
         notesContainer.innerHTML += content;
@@ -372,11 +371,11 @@
         }
 
         const content = `
-                <div class="card bg-base-300 w-96 shadow-2xl card-border border-[#141414] border-4">
+                <div class="card bg-base-100/80 backdrop-blur-md w-96 shadow-xl border border-base-content/10 hover:border-secondary/40 transition-colors">
                     <div class="card-body">
                         <div class="flex justify-between items-center mb-2">
                            <span class="badge badge-secondary badge-sm pb-1 font-bold">@${note.author}</span>
-                           <div class="text-xs opacity-50">#${note.id}</div>
+                           <div class="text-xs opacity-50 font-mono">#${note.id}</div>
                         </div>
                         <h1 id="note-title" class="card-title text-2xl font-bold">
                             ${note.title}
@@ -410,8 +409,8 @@
             }
           })()}
                         </div>
-                        <a class="btn btn-lg font-bold" onClick="viewNote(${note.id})">View</a>
-                        <a class="btn btn-md" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                        <a class="btn btn-primary btn-lg font-bold shadow-md shadow-primary/20" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-neutral btn-md border border-base-content/10" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
                     </div>
                 </div>
             `;
@@ -425,7 +424,12 @@
   loadPublicShares();
 
   async function viewNote(id) {
-    window.location.href = `/api/notes/${id}`;
+    const token = localStorage.getItem("token");
+    if (token) {
+      window.location.href = `/api/notes/${id}?token=${encodeURIComponent(token)}`;
+    } else {
+      window.location.href = `/api/notes/${id}`;
+    }
   }
 
   function showPreview(url) {

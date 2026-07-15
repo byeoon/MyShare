@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    <%= note.title %>
+    <%= note.title %> - MyShare
   </title>
   <meta content="<%= note.title %>" property="og:title" />
   <meta content="<%= note.content %>" property="og:description" />
-  <meta content=<%=note.file %> property="og:image" />
+  <meta content="<%= note.file || '' %>" property="og:image" />
   <meta name="twitter:card" content="summary_large_image">
   <link href="/css/app.css" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico">
@@ -21,87 +21,167 @@
 </head>
 
 <body>
-  <div class="hero bg-[#090909] min-h-screen">
-    <div class="card card-border border-primary border-4 shadow-2xl bg-base-300 w-120">
-      <div class="card-body card-border">
-        <div class="badgeDiv flex flex-wrap gap-2 py-2">
-          <% if (Array.isArray(note.tags)) { %>
-            <% note.tags.forEach(tag=> {
-              const r = parseInt(tag.color.substring(1, 3), 16);
-              const g = parseInt(tag.color.substring(3, 5), 16);
-              const b = parseInt(tag.color.substring(5, 7), 16);
-              const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-              const textColor = (yiq >= 128) ? 'black' : 'white';
-              %>
-              <div class="badge border-none" style="background-color: <%= tag.color %>; color: <%= textColor %>;">
-                <%= tag.text %>
-              </div>
-              <% }) %>
-                <% } else if (note.tags) { %>
-                  <div class="badge badge-outline">
-                    <%= note.tags %>
-                  </div>
-                  <% } %>
-        </div>
-        <h1 class="text-4xl font-bold py-2">
-          <%= note.title %>
-        </h1>
-        <img id="noteImage" src="" width="auto" height="auto" style="max-height: 480px; max-width: 480px;">
-        <h2 class="text-s py-2 text-wrap multiline break-words">
-          <%= note.content %>
-        </h2>
-        <div class="buttonHolder">
-          <button class="btn btn-primary btn-sm" id="copyClipboard" type="submit"
-            onClick="copyToClipboard('<%= note.content %>')">Copy Content</button>
-          <button class="btn btn-primary btn-sm" id="copyClipboardImg" type="submit"
-            onClick="copyToClipboardImg('<%= note.file %>')">Copy Image</button>
+  <div class="hero bg-base-200 min-h-screen p-4 sm:p-8 relative overflow-hidden" id="bg">
+    <div
+      class="card card-border bg-base-100/80 backdrop-blur-2xl border border-base-content/10 shadow-2xl w-full max-w-3xl rounded-2xl relative z-10 overflow-hidden">
+      <div class="card-body p-6 sm:p-10 flex flex-col gap-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-base-content/10">
+          <a href="/dashboard.html"
+            class="btn btn-sm btn-ghost gap-2 font-medium hover:bg-base-200/60 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Dashboard
+          </a>
+          <div class="flex items-center gap-2">
+            <span class="badge badge-neutral badge-sm font-mono opacity-80">Note #<%= note.id %></span>
+            <span class="badge badge-primary badge-outline badge-sm font-mono">UID #<%= note.userId %></span>
+          </div>
         </div>
 
-        <br>
-        <div class="breadcrumbs text-xs">
-          <ul>
-            <li><a href="/dashboard.html">Dashboard</a></li>
-          </ul>
-          <h2 class="text-xs">Uploaded by UID <%= note.userId %>
-          </h2>
+        <div class="flex flex-col gap-3">
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-base-content break-words">
+            <%= note.title %>
+          </h1>
+
+          <div class="badgeDiv flex flex-wrap gap-2">
+            <% if (Array.isArray(note.tags) && note.tags.length> 0) { %>
+              <% note.tags.forEach(function(tag) { %>
+                <% let color=tag.color || "#570df8" ; %>
+                  <div class="badge border-none shadow-sm px-3 py-3 font-semibold tracking-wide text-xs"
+                    style="background-color: <%= color %>; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.4);">
+                    <%= tag.text %>
+                  </div>
+                  <% }); %>
+                    <% } else if (note.tags && typeof note.tags==='string' ) { %>
+                      <div class="badge badge-outline">
+                        <%= note.tags %>
+                      </div>
+                      <% } %>
+          </div>
         </div>
+
+        <div id="imageWrapper"
+          class="flex flex-col items-center justify-center rounded-xl bg-base-200/40 border border-base-content/5 p-3 overflow-hidden hidden">
+          <a href="<%= note.file %>" target="_blank" class="group relative block overflow-hidden rounded-lg">
+            <img id="noteImage" src=""
+              class="max-h-[500px] w-auto object-contain rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.01]"
+              alt="Attachment">
+            <div
+              class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg text-white font-medium text-sm gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Click to view full size
+            </div>
+          </a>
+        </div>
+
+        <div class="bg-base-200/60 backdrop-blur-sm rounded-xl p-6 border border-base-content/5 shadow-inner">
+          <p class="multiline break-words text-base leading-relaxed text-base-content/90 font-normal">
+            <%= note.content %>
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-base-content/10">
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="btn btn-primary shadow-md shadow-primary/20 font-bold gap-2" id="copyClipboard" type="button"
+              onClick="copyNoteContent()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Copy Content
+            </button>
+            <button class="btn btn-neutral border border-base-content/10 gap-2 hidden" id="copyClipboardImg"
+              type="button" onClick="copyNoteFileUrl()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              Copy File URL
+            </button>
+          </div>
+
+          <% if (note.file) { %>
+            <a href="<%= note.file %>" target="_blank"
+              class="btn btn-ghost btn-sm gap-1 text-base-content/70 hover:text-base-content">
+              Open Attachment ↗
+            </a>
+            <% } %>
+        </div>
+
       </div>
     </div>
   </div>
+  <div id="noteDataStore" class="hidden" data-content="<%= encodeURIComponent(note.content || '') %>"
+    data-file="<%= note.file || '' %>"></div>
 </body>
 
 <script>
-  function copyToClipboard(content) {
-    navigator.clipboard.writeText(content).then(() => {
+  function getNoteData() {
+    var store = document.getElementById("noteDataStore");
+    if (!store) return { content: "", file: "" };
+    var content = "";
+    try {
+      content = decodeURIComponent(store.getAttribute("data-content") || "");
+    } catch (e) {
+      content = store.getAttribute("data-content") || "";
+    }
+    return {
+      content: content,
+      file: store.getAttribute("data-file") || ""
+    };
+  }
+
+  function copyNoteContent() {
+    var data = getNoteData();
+    navigator.clipboard.writeText(data.content).then(() => {
       alert("Content copied to clipboard!");
     }).catch(err => {
       console.error("Error copying text: ", err);
     });
   }
 
-  function copyToClipboardImg(content) {
-    navigator.clipboard.write(content).then(() => {
-      alert("Content copied to clipboard!");
+  function copyNoteFileUrl() {
+    var data = getNoteData();
+    let fullUrl = data.file;
+    if (!fullUrl) return;
+    if (!fullUrl.startsWith('http')) {
+      fullUrl = new URL(fullUrl, window.location.origin).href;
+    }
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      alert("Attachment URL copied to clipboard!");
     }).catch(err => {
-      console.error("Error copying image: ", err);
+      console.error("Error copying URL: ", err);
     });
   }
 
   function updateImage() {
+    var data = getNoteData();
+    var fileUrl = data.file;
+    if (!fileUrl || fileUrl.trim() === '' || fileUrl === 'undefined') return;
+
     var image = document.getElementById("noteImage");
-    image.src = `<%= note.file %>`;
+    var wrapper = document.getElementById("imageWrapper");
+    var imageCopyBtn = document.getElementById("copyClipboardImg");
+
+    if (image) image.src = fileUrl;
 
     var tester = new Image();
-    tester.addEventListener('error', imageNotFound);
-    tester.src = `<%= note.file %>`;
-  }
-
-  function imageNotFound() {
-    var image = document.getElementById("noteImage");
-    var imagecopy = document.getElementById("copyClipboardImg");
-    console.log('The image failed to load, removing from document...');
-    image.className = "hidden";
-    imagecopy.className = "hidden";
+    tester.onload = function () {
+      if (wrapper) wrapper.classList.remove("hidden");
+      if (imageCopyBtn) imageCopyBtn.classList.remove("hidden");
+    };
+    tester.onerror = function () {
+      if (imageCopyBtn && fileUrl) imageCopyBtn.classList.remove("hidden");
+    };
+    tester.src = fileUrl;
   }
 
   updateImage();
