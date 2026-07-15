@@ -29,37 +29,114 @@
   <div class="drawer-content bg-base-200 flex flex-col items-center justify-start min-h-screen pt-8">
 
     <input type="checkbox" id="my_modal_6" class="modal-toggle" />
-    <div class="modal" role="dialog">
-      <div class="modal-box space-y-3 shadow-2xl border border-primary max-w-xl">
-        <h2 class="text-lg font-bold">Create a Note</h2>
-        <p>Upload a note with text/image below. You can add priority tags, deletion time, and visibility.</p>
-        <label class="label text-xs font-bold">Note</label> <br>
-        <input type="text" id="shareInput_title" placeholder="Title" class="input w-full max-w-xs" maxlength="32"
-          required />
-        <textarea class="textarea w-full max-w-xs" id="shareInput_content" placeholder="Content" maxlength="2000"
-          required> </textarea>
-        <br>
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">Upload a file</legend>
-          <input type="file" id="shareInput_fileUpload" name="file" class="file-input file-input-sm" />
-          <label class="fieldset-label">Max size: 1GB (Not enforced yet)</label>
-          <input type="text" id="shareInput_file" placeholder="Image URL" class="input w-full max-w-xs" />
-        </fieldset>
-        <div id="tagBuilder" class="space-y-2">
-          <label class="label text-xs font-bold">Tags</label>
-          <div class="flex gap-2">
-            <input type="text" id="tagInput_text" placeholder="Tag Name" class="input input-bordered input-sm w-32" />
-            <input type="color" id="tagInput_color" value="#570df8"
-              class="input input-bordered input-sm w-12 h-8 p-0" />
-            <button type="button" class="btn btn-sm btn-primary" onclick="addTag()">Add</button>
-          </div>
-          <div id="tagList" class="flex flex-wrap gap-2 min-h-[1.5rem]"></div>
-        </div> <br>
+    <div class="modal backdrop-blur-sm" role="dialog">
+      <div
+        class="modal-box bg-base-300/95 backdrop-blur-2xl border border-base-content/10 shadow-2xl rounded-2xl p-8 max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative">
 
-        <input type="checkbox" id="shareInput_visibility" checked="checked" class="checkbox" />Make this note private?
-        <div class="modal-action">
-          <label for="my_modal_6" class="btn">Cancel</label>
-          <label for="my_modal_6" class="btn bg-success text-white" onClick="saveShare()">Save</label>
+        <div>
+          <h2 class="text-2xl font-bold text-base-content">Create a Note</h2>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider mb-1.5 block">Title
+              <span class="text-error">*</span></label>
+            <input type="text" id="shareInput_title" placeholder="Give your note a title..."
+              class="input input-bordered w-full bg-base-200/60 focus:border-primary transition-colors font-medium"
+              maxlength="32" required />
+          </div>
+
+          <div>
+            <label
+              class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider mb-1.5 block">Content
+              <span class="text-error">*</span></label>
+            <textarea
+              class="textarea textarea-bordered w-full h-32 bg-base-200/60 focus:border-primary transition-colors text-sm leading-relaxed p-3.5"
+              id="shareInput_content" placeholder="Write your note content here..." maxlength="2000"
+              required></textarea>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-base-content/5 space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider block">Attachment
+              Option</label>
+            <select id="attachmentTypeSelect" class="select select-bordered select-sm bg-base-200/60 font-medium"
+              onchange="toggleAttachmentMode()">
+              <option value="upload" selected>Upload Local File</option>
+              <option value="link">Direct Link URL</option>
+            </select>
+          </div>
+
+          <div id="attachmentModeUpload" class="transition-all">
+            <input type="file" id="shareInput_fileUpload" name="file"
+              class="file-input file-input-bordered file-input-sm w-full bg-base-200/60" />
+            <span class="text-[11px] text-base-content/50 mt-1 block">Max size: 1GB</span>
+          </div>
+
+          <div id="attachmentModeLink" class="hidden transition-all">
+            <input type="text" id="shareInput_file" placeholder="https://example.com/image.png"
+              class="input input-bordered input-sm w-full h-9 bg-base-200/60 focus:border-primary transition-colors" />
+            <span class="text-[11px] text-base-content/50 mt-1 block">Paste an image or file URL directly</span>
+          </div>
+        </div>
+
+        <div id="tagBuilder" class="pt-3 border-t border-base-content/5 space-y-3">
+          <label class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider block"> Tags</label>
+          <div class="flex items-center gap-2.5">
+            <input type="text" id="tagInput_text" placeholder="Tag Name (high priority, work, personal)"
+              class="input input-bordered input-sm flex-1 bg-base-200/60 focus:border-primary transition-colors" />
+            <div class="flex items-center gap-1.5 bg-base-200/60 border border-base-content/10 rounded-lg px-2.5 py-1">
+              <input type="color" id="tagInput_color" value="#570df8"
+                class="w-6 h-6 p-0 border-0 rounded cursor-pointer bg-transparent" />
+            </div>
+            <button type="button" class="btn btn-sm btn-primary shadow-sm px-4 font-bold" onclick="addTag()">Add
+              Tag</button>
+          </div>
+          <div id="tagList"
+            class="flex flex-wrap gap-2 min-h-[1.5rem] p-2 rounded-xl bg-base-200/30 border border-base-content/5 empty:hidden">
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2 border-t border-base-content/5">
+          <div class="flex items-center justify-between p-4 bg-base-200/50 rounded-xl border border-base-content/5">
+            <div>
+              <span class="text-sm font-bold text-base-content block">Private Note</span>
+              <span class="text-xs text-base-content/60 mt-0.5 block">Only visible to you unless shared via direct
+                link</span>
+            </div>
+            <input type="checkbox" id="shareInput_visibility" checked="checked"
+              class="checkbox checkbox-primary shadow-sm" />
+          </div>
+
+          <div class="p-4 bg-base-200/50 rounded-xl border border-base-content/5 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-sm font-bold text-base-content block">Decaying Note</span>
+                <span class="text-xs text-base-content/60 mt-0.5 block">Automatically delete this note after a set
+                  duration</span>
+              </div>
+              <input type="checkbox" id="shareInput_decaying" class="checkbox checkbox-primary shadow-sm"
+                onchange="toggleDecayDropdown()" />
+            </div>
+
+            <div id="decayDropdownContainer"
+              class="hidden pt-3 border-t border-base-content/5 flex items-center justify-between">
+              <span class="text-xs font-semibold text-base-content/80">Expiration Duration:</span>
+              <select id="shareInput_decayTime" class="select select-bordered select-sm bg-base-300/80 font-medium">
+                <option value="1">1 day</option>
+                <option value="7" selected>7 days</option>
+                <option value="30">30 days</option>
+                <option value="90">90 days</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-action pt-4 border-t border-base-content/10 flex justify-end gap-3">
+          <label for="my_modal_6" class="btn btn-ghost hover:bg-base-200 px-6 font-medium cursor-pointer">Cancel</label>
+          <label for="my_modal_6" class="btn btn-primary px-8 shadow-lg shadow-primary/30 font-bold cursor-pointer"
+            onClick="saveShare()">Create Note</label>
         </div>
       </div>
     </div>
@@ -108,12 +185,10 @@
       <h3 id="hellousername" class="text-lg font-bold p-2">Hello, {undefined}</h3>
       <label for="my_modal_6" class="btn btn-primary shadow-md shadow-primary/20 font-bold">Create a Note</label>
       <li class=""></li>
-      <li><a class="hover:bg-base-300/50 transition-colors">Upload Settings (WIP)</a></li>
       <li><a class="hover:bg-base-300/50 transition-colors">Embed Configuration (WIP)</a></li>
       <li class=""></li>
       <li><a class="text-error font-medium hover:bg-error/10 transition-colors cursor-pointer" id="deleteMode">Manage
           Notes</a></li>
-      <li class=""></li>
       <li><a class="text-error font-medium hover:bg-error/10 transition-colors cursor-pointer"
           onClick="logout()">Logout</a></li>
     </ul>
@@ -122,6 +197,42 @@
 
 </html>
 <script>
+  function toggleDecayDropdown() {
+    var check = document.getElementById("shareInput_decaying");
+    var container = document.getElementById("decayDropdownContainer");
+    if (!check || !container) return;
+    if (check.checked) {
+      container.classList.remove("hidden");
+    } else {
+      container.classList.add("hidden");
+    }
+  }
+
+  function toggleAttachmentMode() {
+    var select = document.getElementById("attachmentTypeSelect");
+    var uploadBox = document.getElementById("attachmentModeUpload");
+    var linkBox = document.getElementById("attachmentModeLink");
+    var fileInput = document.getElementById("shareInput_fileUpload");
+    var urlInput = document.getElementById("shareInput_file");
+
+    if (!select || !uploadBox || !linkBox) return;
+
+    if (select.value === "upload") {
+      uploadBox.classList.remove("hidden");
+      linkBox.classList.add("hidden");
+      if (urlInput) urlInput.value = "";
+    } else if (select.value === "link") {
+      uploadBox.classList.add("hidden");
+      linkBox.classList.remove("hidden");
+      if (fileInput) fileInput.value = "";
+    } else {
+      uploadBox.classList.add("hidden");
+      linkBox.classList.add("hidden");
+      if (fileInput) fileInput.value = "";
+      if (urlInput) urlInput.value = "";
+    }
+  }
+
   async function loadVersionInfo() {
     try {
       const res = await fetch('/api/version');
@@ -236,12 +347,17 @@
       };
     }
 
+    let decaying = document.getElementById("shareInput_decaying") ? document.getElementById("shareInput_decaying").checked : false;
+    let decayTime = document.getElementById("shareInput_decayTime") ? document.getElementById("shareInput_decayTime").value : "7";
+
     const userData = {
       title: title,
       content: textcontent,
       file: file,
       tags: tags,
-      visibility: visible
+      visibility: visible,
+      decaying: decaying,
+      decayTime: decaying ? parseInt(decayTime) : null
     };
 
     try {
