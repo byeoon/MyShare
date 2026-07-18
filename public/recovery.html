@@ -9,27 +9,49 @@
   <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico" />
 </head>
 
-<div class="hero bg-base-200 min-h-screen">
-  <div class="card card-border bg-base-300 border-base-100 w-80 shadow-xl">
-    <div class="card-body">
-      <div class="container"
-        style="display: grid; align-items: center; grid-template-columns: 1fr 1fr 1fr; column-gap: 2px;">
-        <img src="/img/myshare_white.png" style="height: 64px; width: 64px" />
-        <h2 class="text-xl font-bold py-2">Account Recovery</h2>
-      </div>
-      <h3>Please enter the email associated to your account.</h3>
+<div class="hero bg-base-200 min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"
+  id="bg">
+  <div class="pointer-events-none absolute inset-0 opacity-75 transition-opacity duration-300 z-0"
+    style="background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(30, 33, 189, 0.22), transparent 60%);">
+  </div>
 
-      <input id="email" placeholder="Email" class="input input-bordered" />
-      <button class="btn btn-primary" style="padding: 20px;" id="login" type="submit" onClick="postToServer()">
-        Send Link
-      </button>
+  <div class="flex flex-col gap-4 items-center relative z-10">
+    <div class="card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-96 shadow-xl">
+      <div class="card-body">
+        <div class="container"
+          style="display: grid; align-items: center; grid-template-columns: 1fr 1fr 1fr; column-gap: 2px;">
+          <img src="/img/myshare_white.png" style="height: 64px; width: 64px" />
+          <h2 class="text-xl font-bold py-2">Reset Password</h2>
+        </div>
+        <h3 id="subtitle">Please enter the email associated to your account.</h3>
+        <input id="email" placeholder="Email"
+          class="input input-bordered mt-2 w-full bg-base-200/60 backdrop-blur-sm" />
+        <input id="password" type="password" placeholder="New Password"
+          class="input input-bordered p-4 mt-2 w-full bg-base-200/60 backdrop-blur-sm" style="display: none;" />
+        <button class="btn btn-primary w-full mt-4 shadow-lg shadow-primary/20" style="padding: 20px;" id="login"
+          type="submit" onClick="postToServer()">
+          Send Link
+        </button>
+        <div class="divider"></div>
+        <p2 class="text-center"><a class="link" href="/login.html">Back to Login</a></p2>
+      </div>
     </div>
   </div>
-</div>
 
 </html>
 
 <script>
+  const bg = document.getElementById('bg');
+  if (bg) {
+    bg.addEventListener('mousemove', (e) => {
+      const rect = bg.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      bg.style.setProperty('--mouse-x', `${x}px`);
+      bg.style.setProperty('--mouse-y', `${y}px`);
+    });
+  }
+
   var input = document.getElementById("email");
   input.addEventListener("keypress", function (event) {
     if (event.key === "Enter") {
@@ -38,32 +60,54 @@
     }
   });
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  if (token) {
+    document.getElementById("subtitle").innerText = "Please enter your new password.";
+    document.getElementById("email").style.display = "none";
+    document.getElementById("password").style.display = "block";
+    document.getElementById("login").innerText = "Reset Password";
+  }
+
   async function postToServer() {
-    const email = document.getElementById("email").value;
-    const userData = {
-      email: email
-    };
-
-    try {
-      const response = await fetch(
-        "/api/users/accountrecovery",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Err");
+    if (token) {
+      const password = document.getElementById("password").value;
+      if (!password) {
+        alert("Please enter a new password.");
+        return;
       }
-      const data = await response.json();
-      alert("If that email exists, a recovery link has been sent!");
-    } catch (error) {
-      console.error("err:", error);
-      alert("error" + error);
+      const userData = { token: token, newPassword: password };
+      try {
+        const response = await fetch("/api/users/resetpassword", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Error resetting password");
+        alert("Password has been successfully reset! You can now log in.");
+        window.location.href = "/login.html";
+      } catch (error) {
+        console.error("err:", error);
+        alert("Error: " + error.message);
+      }
+    } else {
+      const email = document.getElementById("email").value;
+      const userData = { email: email };
+      try {
+        const response = await fetch("/api/users/accountrecovery", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        });
+        if (!response.ok) throw new Error("Err");
+        const data = await response.json();
+        alert("If an account with that email exists, a recovery link has been sent!");
+      } catch (error) {
+        console.error("err:", error);
+        alert("error" + error);
+      }
     }
   }
 
