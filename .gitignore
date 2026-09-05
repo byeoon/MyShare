@@ -1,4 +1,75 @@
+# Dependencies
+
 node_modules/
+
+# Environment / secrets
 .env
-uploads/
+.env.*
+!.env.example
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# SvelteKit
+frontend/build/
+frontend/.vercel/
+frontend/.netlify/
+
+# Build / distribution output
+backend/dist/
+backend/build/
+dist/
+build/
+
+# Test / coverage output
+coverage/
+.nyc_output/
+
+# Caches
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE / editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Local databases / data
+*.sqlite
+*.sqlite3
+*.db
+
+# Miscellaneous
+.vercel/
+.netlify/
+.turbo/
+EOF

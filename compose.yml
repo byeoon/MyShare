@@ -1,0 +1,38 @@
+services:
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        ports:
+            - '${FRONTEND_PORT:-3000}:3000'
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        ports:
+            - '${BACKEND_PORT:-8000}:8000'
+
+    db:
+        image: mariadb
+        restart: unless-stopped
+        environment:
+            MARIADB_DATABASE: myshare
+            MARIADB_USER: mariadb
+            MARIADB_PASSWORD: MakeASecurePassword999!
+            MARIADB_ROOT_PASSWORD: root_password_here
+        volumes:
+            - mariadb_data:/var/lib/mysql
+            - ./setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+        healthcheck:
+            test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    mariadb_data:
+    caddy_data:
+    caddy_config:
