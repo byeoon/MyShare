@@ -1,12 +1,13 @@
 {
-    "name": "myshare",
+    "name": "backend",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "src/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build-css": "npx @tailwindcss/cli -i public/css/tailwind.css -o public/css/app.css --minify",
-        "dev": "nodemon index.js"
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js"
     },
     "allowScripts": {
         "@parcel/watcher": true,
@@ -33,6 +34,7 @@
     },
     "devDependencies": {
         "daisyui": "^5.6.18",
+        "nodemon": "^3.1.9",
         "tailwindcss": "^4.0.9"
     }
 }
