@@ -3,7 +3,6 @@ const AppDataSource = require('../database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const { securityLogMessage } = require('../utils/Logger');
 
 const router = express.Router();
 
@@ -103,7 +102,6 @@ router.post('/users/accountrecovery', async (req, res) => {
             console.log(error);
             return res.status(500).json({ error: 'Failed to send recovery email.' });
         } else {
-            securityLogMessage('Email sent: ' + info.response);
             return res.status(200).json({ message: 'Recovery email sent.' });
         }
     });
@@ -132,8 +130,6 @@ router.post('/users/resetpassword', async (req, res) => {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
         await userRepo.save(user);
-
-        securityLogMessage(`Password reset for user ${user.email}`);
         res.status(200).json({ message: 'Password has been successfully reset.' });
     } catch (error) {
         console.log(error);
@@ -157,13 +153,12 @@ router.post('/users/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-        securityLogMessage('User typed the wrong password.');
         return res.status(401).json({ error: 'Invalid password!' });
     }
 
     const secret = process.env.JWT_SECRET || 'secret';
     const token = jwt.sign({ email: user.email }, secret);
-    securityLogMessage('New user signed in');
+    console.log('[✅] New user signed in');
     return res.json({ token });
 });
 
