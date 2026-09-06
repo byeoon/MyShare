@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { mode } from 'mode-watcher';
+
     let x = 0.5;
     let y = 0.5;
 
@@ -17,8 +19,7 @@
             600px circle at
             ${x * 100}%
             ${y * 100}%,
-            rgba(30, 33, 189, 0.22),
+            rgba(30, 33, 189, ${mode.current === 'dark' ? 0.92 : 0.5}),
             transparent 60%
     )`}
->
-</div>
+></div>
