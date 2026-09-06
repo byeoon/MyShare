@@ -16,10 +16,10 @@
     role="presentation"
     style:background={`
         radial-gradient(
-            600px circle at
+            550px circle at
             ${x * 100}%
             ${y * 100}%,
-            rgba(30, 33, 189, ${mode.current === 'dark' ? 0.92 : 0.5}),
-            transparent 60%
+            rgba(30, 30, 190, ${mode.current === 'dark' ? 0.25 : 0.35}),
+            transparent 50%
     )`}
 ></div>
