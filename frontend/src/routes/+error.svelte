@@ -1,9 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import Background from '$lib/components/Background.svelte';
 </script>
 
-<Background />
 <div class="hero bg-base-300 min-h-screen">
     <div class="hero-content flex-col lg:flex-row">
         <div>
@@ -13,8 +11,8 @@
             <h1 class="text-2xl text-center">{page.error!.message}</h1>
             <p class="py-6 text-center">You are not supposed to be here... go back?</p>
             <center>
-                <a href="/"><button class="btn btn-neutral px-10">Dashboard</button> </a></center
-            >
+                <a href="/"><button class="btn btn-neutral px-10">Dashboard</button> </a>
+            </center>
         </div>
     </div>
 </div>
