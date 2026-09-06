@@ -1,0 +1,14 @@
+{
+  "Version": "15.0.0",
+  "Name": "MyShare",
+  "DestinationType": "ImageUploader, TextUploader, FileUploader",
+  "RequestMethod": "POST",
+  "RequestURL": "https://localhost:5173/api/upload",
+  "Headers": {
+    "Authorization": "{USER_TOKEN}"
+  },
+  "Body": "MultipartFormData",
+  "FileFormName": "file",
+  "URL": "https://localhost:5173/uploads/{json:filename}",
+  "ErrorMessage": "{json:error}"
+}
