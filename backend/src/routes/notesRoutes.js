@@ -1,19 +1,18 @@
 const express = require('express');
 const AppDataSource = require('../database');
 const jwt = require('jsonwebtoken');
-const { notesLogMessage } = require('../utils/Logger');
 const router = express.Router();
 
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) {
-        notesLogMessage('[Notes] User does not have a token.');
+        console.log('[!] User does not have a token.');
         return res.status(403).json({ error: 'You are not signed in.' });
     }
     const secret = process.env.JWT_SECRET || 'secret';
     jwt.verify(token, secret, (err, decoded) => {
         if (err || !decoded || !decoded.email) {
-            notesLogMessage('User has invalid token.');
+            console.log('[!] User has invalid token.');
             return res.status(401).json({ error: 'Unauthorized' });
         }
         req.user = decoded;
@@ -78,7 +77,7 @@ router.post('/notes/delete', verifyToken, async (req, res) => {
         const note = await noteRepo.findOneBy({ id: noteId });
 
         if (note.userId != userId) {
-            notesLogMessage(`UserID ${userId} tried to delete a note that wasn't theirs.`);
+            console.log(`[!!] UserID ${userId} tried to delete a note that wasn't theirs.`);
             return res.status(403).json({ message: "You cannot delete notes that aren't yours." });
         }
         noteRepo.remove(note);
@@ -188,8 +187,8 @@ router.get('/notes/:id', async (req, res) => {
 
         if (note.visibility == true) {
             if (!token) {
-                notesLogMessage(
-                    `[Notes] Unauthorized access attempt to private note #${noteId} (No token)`,
+                console.log(
+                    `[!!] Unauthorized access attempt to private note #${noteId} (No token)`,
                 );
                 return res
                     .status(403)
@@ -202,8 +201,8 @@ router.get('/notes/:id', async (req, res) => {
                 const user = await userRepo.findOneBy({ email: decoded.email });
 
                 if (!user || user.id != note.userId) {
-                    notesLogMessage(
-                        `[Notes] User ${decoded.email} tried to access a private note belonging to UserID ${note.userId}`,
+                    console.log(
+                        `[!!] User ${decoded.email} tried to access a private note belonging to UserID ${note.userId}`,
                     );
                     return res
                         .status(403)

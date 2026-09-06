@@ -23,7 +23,6 @@ const upload = multer({ storage: storage });
 const userRepo = AppDataSource.getRepository('User');
 
 const cookieParser = require('cookie-parser');
-const { coreLogMessage, securityLogMessage } = require('./utils/Logger');
 const PORT = process.env.PORT || 3010;
 const HOST = process.env.HOST || '127.0.0.1';
 const app = express();
@@ -45,26 +44,15 @@ app.get('/', (req, res) => {
 
 AppDataSource.initialize()
     .then(() => {
-        app.listen(PORT, () => coreLogMessage(`Server running on ${process.env.PORT}`));
+        app.listen(PORT, () => console.log(`Server running on ${process.env.PORT}`));
     })
     .catch((error) => {
-        coreLogMessage('Error while initializing server:', error?.stack || error?.message || error);
+        console.log(
+            'Error while initializing server:',
+            error?.stack || error?.message || error
+        );
     });
 
-// **
-// Gets the current version hash from GitHub
-// **
-app.get('/api/version', async (req, res) => {
-    try {
-        const ghRes = await fetch('https://api.github.com/repos/byeoon/MyShare/commits/main', {
-            headers: { 'User-Agent': 'MyShare' },
-        });
-        const data = await ghRes.json();
-        res.json({ commit: data.sha?.slice(0, 7) || 'dev' });
-    } catch (e) {
-        res.json({ commit: 'dev' });
-    }
-});
 
 // **
 // Verifies user token, security measure.
@@ -72,7 +60,7 @@ app.get('/api/version', async (req, res) => {
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'] || req.cookies.token || req.query.token;
     if (!token) {
-        securityLogMessage('User does not have a token.');
+        console.log('[!] User does not have a token.');
         return res.status(403).json({ error: 'You are not signed in.' });
     }
     const secret = process.env.JWT_SECRET || 'secret';
@@ -115,7 +103,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    coreLogMessage('Image upload complete: ' + req.file.filename);
+    console.log('[✅]  Image upload complete: ' + req.file.filename);
     res.json({ filename: req.file.filename });
 });
 
