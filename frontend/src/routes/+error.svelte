@@ -2,7 +2,7 @@
     import { page } from '$app/state';
 </script>
 
-<div class="hero bg-base-300 min-h-screen">
+<div class="hero min-h-screen">
     <div class="hero-content flex-col lg:flex-row">
         <div>
             <h1 class="text-5xl font-bold text-center" style="font-size: 92px;">
