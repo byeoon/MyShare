@@ -1,0 +1,43 @@
+.card-scene {
+    perspective: 1000px;
+}
+
+.card-flipper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.card-flipper.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    grid-area: 1 / 1 / 2 / 2;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+    width: 100%;
+    height: 100%;
+}
+
+.card-front {
+    transform: rotateY(0deg);
+    pointer-events: auto;
+}
+
+.card-flipper.is-flipped .card-front {
+    pointer-events: none;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    pointer-events: none;
+}
+
+.card-flipper.is-flipped .card-back {
+    pointer-events: auto;
+}

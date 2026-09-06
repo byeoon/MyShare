@@ -1,4 +1,5 @@
 <script lang="ts">
+    import './auth.css';
     import Background from '$lib/components/Background.svelte';
     import Stats from '$lib/components/Stats.svelte';
     import { mode } from 'mode-watcher';
@@ -76,75 +77,151 @@
     class="hero bg-base-200 min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"
 >
     <div class="flex flex-col gap-4 items-center relative z-10">
-        <div
-            class="card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-96 shadow-xl"
-        >
-            <div class="card-body">
+        <div class="card-scene w-96">
+            <div class="card-flipper" class:is-flipped={authType === 'register'}>
                 <div
-                    class="container"
-                    style="
-                        display: grid;
-                        align-items: center;
-                        grid-template-columns: 1fr 1fr 1fr;
-                        column-gap: 2px;
-                        padding: 8px;
-                    "
+                    class="card-face card-front card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-full shadow-xl"
+                    inert={authType === 'register'}
                 >
-                    <img
-                        src={mode.current == 'dark' ? myshare_white : myshare_black}
-                        style="height: 64px; width: 64px"
-                        alt="myshare logo"
-                    />
-                    <h2 class="text-2xl font-bold py-2">Login</h2>
+                    <div class="card-body">
+                        <div
+                            class="container"
+                            style="
+                                display: grid;
+                                align-items: center;
+                                grid-template-columns: 1fr 1fr 1fr;
+                                column-gap: 2px;
+                                padding: 8px;
+                            "
+                        >
+                            <img
+                                src={mode.current == 'dark' ? myshare_white : myshare_black}
+                                style="height: 64px; width: 64px"
+                                alt="myshare logo"
+                            />
+                            <h2 class="text-2xl font-bold py-2">Login</h2>
+                        </div>
+
+                        <input
+                            id="email"
+                            placeholder="Email"
+                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={email}
+                        />
+                        <input
+                            id="pw"
+                            type="password"
+                            placeholder="Password"
+                            class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={password}
+                        />
+                        <button
+                            class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
+                            style="padding: 20px"
+                            id="login"
+                            type="submit"
+                            onclick={postToServer}
+                        >
+                            Login
+                        </button>
+                        {#if traceback && authType === 'login'}
+                            <p class="text-red-600 dark:text-red-400 text-center mt-2">
+                                {traceback}
+                            </p>
+                        {/if}
+                        <div class="divider"></div>
+                        <div class="text-center">
+                            <p class="text-center">
+                                Don't have an account?
+                                <button
+                                    type="button"
+                                    class="link link-primary inline p-0 bg-transparent border-0 cursor-pointer"
+                                    onclick={() => {
+                                        authType = 'register';
+                                        traceback = null;
+                                    }}
+                                >
+                                    Register!
+                                </button>
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <input
-                    id="email"
-                    placeholder="Email"
-                    class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
-                    bind:value={email}
-                />
-                {#if authType == 'register'}
-                    <input
-                        id="username"
-                        placeholder="Username"
-                        class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
-                        bind:value={username}
-                    />
-                {/if}
-                <input
-                    id="pw"
-                    type="password"
-                    placeholder="Password"
-                    class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
-                    bind:value={password}
-                />
-                <button
-                    class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
-                    style="padding: 20px"
-                    id="login"
-                    type="submit"
-                    onclick={postToServer}
+                <div
+                    class="card-face card-back card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-full shadow-xl"
+                    inert={authType === 'login'}
                 >
-                    Login
-                </button>
-                {#if traceback}
-                    <p class="text-red-600 dark:text-red-400 text-center mt-2">{traceback}</p>
-                {/if}
-                <div class="divider"></div>
-                <center>
-                    {#if authType == 'login'}
-                        <p2 class="text-center"
-                            >Don't have an account?
-                            <a class="link" onclick={() => (authType = 'register')}>Register!</a>
-                        </p2>
-                    {:else}
-                        <p2 class="text-center"
-                            >Already have an account?
-                            <a class="link" onclick={() => (authType = 'login')}>Login!</a>
-                        </p2>
-                    {/if}
-                </center>
+                    <div class="card-body">
+                        <div
+                            class="container"
+                            style="
+                                display: grid;
+                                align-items: center;
+                                grid-template-columns: 1fr 1fr 1fr;
+                                column-gap: 2px;
+                                padding: 8px;
+                            "
+                        >
+                            <img
+                                src={mode.current == 'dark' ? myshare_white : myshare_black}
+                                style="height: 64px; width: 64px"
+                                alt="myshare logo"
+                            />
+                            <h2 class="text-2xl font-bold py-2">Register</h2>
+                        </div>
+
+                        <input
+                            id="email-register"
+                            placeholder="Email"
+                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={email}
+                        />
+                        <input
+                            id="username-register"
+                            placeholder="Username"
+                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={username}
+                        />
+                        <input
+                            id="pw-register"
+                            type="password"
+                            placeholder="Password"
+                            class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={password}
+                        />
+                        <button
+                            class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
+                            style="padding: 20px"
+                            id="register-btn"
+                            type="submit"
+                            onclick={postToServer}
+                        >
+                            Register
+                        </button>
+                        {#if traceback && authType === 'register'}
+                            <p class="text-red-600 dark:text-red-400 text-center mt-2">
+                                {traceback}
+                            </p>
+                        {/if}
+                        <div class="divider"></div>
+                        <div class="text-center">
+                            <p class="text-center">
+                                Already have an account?
+                                <button
+                                    type="button"
+                                    class="link link-primary inline p-0 bg-transparent border-0 cursor-pointer"
+                                    onclick={() => {
+                                        authType = 'login';
+                                        traceback = null;
+                                    }}
+                                >
+                                    Login!
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
