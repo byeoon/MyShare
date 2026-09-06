@@ -9,15 +9,23 @@ const userRoutes = require('./routes/userRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const notesRoutes = require('./routes/notesRoutes');
 const multer = require('multer');
+
+const fs = require('fs');
+const uploadDir = path.join(__dirname, '..', 'uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
+
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '..', 'uploads'));
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     },
 });
+
+
 const upload = multer({ storage: storage });
 
 const userRepo = AppDataSource.getRepository('User');
@@ -116,7 +124,11 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
     coreLogMessage('Image upload complete: ' + req.file.filename);
-    res.json({ filename: req.file.filename });
+    res.json({
+        filename: req.file.filename,
+        url: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+    });
+
 });
 
 // **
