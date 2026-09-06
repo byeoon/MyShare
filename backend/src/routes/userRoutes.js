@@ -27,7 +27,7 @@ router.post('/users', async (req, res) => {
         const userRepo = AppDataSource.getRepository('User');
         if (process.env.ALLOW_REGISTERING == 'false') {
             return res.status(400).json({
-                message:
+                error:
                     'Registering is not allowed. Please contact the site administrator for more information.',
             });
         }
@@ -163,9 +163,8 @@ router.post('/users/login', async (req, res) => {
 
     const secret = process.env.JWT_SECRET || 'secret';
     const token = jwt.sign({ email: user.email }, secret);
-    res.cookie('token', token, { httpOnly: false, secure: false, maxAge: 3600000 * 24 * 7 }); // 7 days
-    res.json({ token });
     securityLogMessage('New user signed in');
+    return res.json({ token });
 });
 
 // **

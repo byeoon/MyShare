@@ -3,6 +3,7 @@
     "scripts": {
         "dev": "docker compose -f compose.yml -f compose.dev.yml up",
         "dev:build": "docker compose -f compose.yml -f compose.dev.yml build",
+        "dev:nocache": "docker compose -f compose.yml -f compose.dev.yml build --no-cache",
         "dev:down": "docker compose -f compose.yml -f compose.dev.yml down",
         "dev:logs": "docker compose -f compose.yml -f compose.dev.yml logs -f",
         "build": "docker compose build",
@@ -29,6 +30,7 @@
     },
     "devDependencies": {
         "eslint": "^9.39.5",
-        "prettier": "^3.9.6"
+        "prettier": "^3.9.6",
+        "prettier-plugin-svelte": "^4.1.1"
     }
 }
