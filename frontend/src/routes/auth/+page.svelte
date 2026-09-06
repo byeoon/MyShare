@@ -1,6 +1,5 @@
 <script lang="ts">
     import './auth.css';
-    import Background from '$lib/components/Background.svelte';
     import Stats from '$lib/components/Stats.svelte';
     import { mode } from 'mode-watcher';
     import { goto } from '$app/navigation';
@@ -70,8 +69,6 @@
         }
     }
 </script>
-
-<Background />
 
 <div
     class="hero bg-base-200 min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"

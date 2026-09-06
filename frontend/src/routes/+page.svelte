@@ -1,10 +1,8 @@
 <script lang="ts">
-    import Background from '$lib/components/Background.svelte';
     import Sidebar from '$lib/components/Sidebar.svelte';
     import './dashboard.css';
 </script>
 
-<Background />
 
 <Sidebar>
     <div>
