@@ -3,7 +3,7 @@ FROM node:24-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install && npm ls @sveltejs/adapter-node
+RUN npm ci
 
 COPY . .
 
