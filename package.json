@@ -17,6 +17,8 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "lint": "eslint .",
+        "lint:frontend": "eslint frontend --max-warnings=0",
+        "lint:backend": "eslint backend --max-warnings=0",
         "lint:fix": "eslint . --fix",
         "check": "pnpm format:check && pnpm lint",
         "frontend": "pnpm --filter frontend",
