@@ -24,7 +24,6 @@ const userRepo = AppDataSource.getRepository('User');
 
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3010;
-const HOST = process.env.HOST || '127.0.0.1';
 const app = express();
 
 app.use(cookieParser());
@@ -88,7 +87,7 @@ app.get('/api/email', verifyToken, async (req, res) => {
             username: user.username,
         });
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: `Internal server error \n ${error}` });
     }
 });
 
@@ -107,6 +106,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 // **
 // Error page fallbacks.
 // **
-app.use((req, res, next) => {
+app.use((req, res) => {
     res.status(404).render('404', { message: 'Page Not Found' });
 });

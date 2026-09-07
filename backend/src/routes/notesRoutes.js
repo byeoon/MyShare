@@ -30,7 +30,7 @@ const verifyToken = (req, res, next) => {
 // **
 router.post('/notes/create', verifyToken, async (req, res) => {
     const userId = req.headers['authorization-id'];
-    let { title, content, file, tags, visibility } = req.body;
+    const { title, content, file, tags, visibility } = req.body;
     try {
         const noteRepo = AppDataSource.getRepository('Note');
         const serializedTags = typeof tags === 'object' ? JSON.stringify(tags) : tags;
@@ -71,7 +71,7 @@ router.post('/notes/create', verifyToken, async (req, res) => {
 // The user MUST be the same as the person deleting it, or else it won't work.
 // **
 router.post('/notes/delete', verifyToken, async (req, res) => {
-    let { noteId, userId } = req.body;
+    const { noteId, userId } = req.body;
     try {
         const noteRepo = AppDataSource.getRepository('Note');
         const note = await noteRepo.findOneBy({ id: noteId });
@@ -104,7 +104,8 @@ router.get('/notes/get', verifyToken, async (req, res) => {
                 if (!Array.isArray(parsedTags)) {
                     parsedTags = note.tags ? [{ text: note.tags, color: '#570df8' }] : [];
                 }
-            } catch (e) {
+            } catch (error) {
+                console.log(error.message);
                 parsedTags = note.tags ? [{ text: note.tags, color: '#570df8' }] : [];
             }
             return {
@@ -148,6 +149,7 @@ router.get('/notes/public', async (req, res) => {
                     parsedTags = note.tags ? [{ text: note.tags, color: '#570df8' }] : [];
                 }
             } catch (e) {
+                console.log(e);
                 parsedTags = note.tags ? [{ text: note.tags, color: '#570df8' }] : [];
             }
             return {
@@ -209,6 +211,7 @@ router.get('/notes/:id', async (req, res) => {
                         .json({ message: 'You do not have access to this private note.' });
                 }
             } catch (err) {
+                console.log(err.message);
                 return res.status(401).json({ message: 'Invalid or expired session.' });
             }
         }
