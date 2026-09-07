@@ -47,7 +47,7 @@ AppDataSource.initialize()
         app.listen(PORT, () => console.log(`Server running on ${process.env.PORT}`));
     })
     .catch((error) => {
-        coreLogMessage('Error while initializing server: ', error.message);
+        console.log('Error while initializing server: ', error.message);
     });
 
 
