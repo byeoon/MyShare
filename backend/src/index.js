@@ -48,7 +48,10 @@ AppDataSource.initialize()
         app.listen(PORT, () => coreLogMessage(`Server running on ${process.env.PORT}`));
     })
     .catch((error) => {
-        coreLogMessage('Error while initializing server: ', error.message);
+        coreLogMessage(
+            'Error while initializing server:',
+            error?.stack || error?.message || error
+        );
     });
 
 // **

@@ -1,4 +1,8 @@
 services:
+    proxy:
+        environment:
+            FRONTEND_UPSTREAM: frontend:5173
+
     frontend:
         build:
             context: ./frontend
