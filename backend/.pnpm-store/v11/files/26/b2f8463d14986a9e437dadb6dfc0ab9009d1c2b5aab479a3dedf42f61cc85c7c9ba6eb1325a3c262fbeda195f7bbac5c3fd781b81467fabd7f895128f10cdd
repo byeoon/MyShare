@@ -1,0 +1,115 @@
+{
+  "name": "mariadb",
+  "version": "3.5.4",
+  "description": "fast mariadb or mysql connector.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./promise.js"
+      },
+      "require": {
+        "types": "./types/index.d.cts",
+        "default": "./dist/promise.cjs"
+      }
+    },
+    "./callback": {
+      "import": {
+        "types": "./types/callback.d.ts",
+        "default": "./callback.js"
+      },
+      "require": {
+        "types": "./types/callback.d.cts",
+        "default": "./dist/callback.cjs"
+      }
+    }
+  },
+  "types": "types/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "private": false,
+  "scripts": {
+    "build": "npm run build:types && npm run build:cjs",
+    "build:cjs": "esbuild promise.js --bundle --minify --platform=node --format=cjs --target=node20 --external:denque --external:iconv-lite --external:lru-cache --outfile=dist/promise.cjs && esbuild callback.js --bundle --minify --platform=node --format=cjs --target=node20 --external:denque --external:iconv-lite --external:lru-cache --outfile=dist/callback.cjs",
+    "build:types": "node tools/generate-cts.js",
+    "test": "npm run test:types-prettier && npm run test:prettier && npm run test:tsc && npm run test:types && npm run test:cts && npm run test:lint && npm run test:imports && npm run test:base",
+    "test:base": "vitest --no-file-parallelism --isolate --reporter=verbose run",
+    "test:imports": "npm run build && node test/import/cjs.cjs && node test/import/esm.mjs && npm run test:imports:tsc",
+    "test:imports:tsc": "tsc --noEmit -p test/import/tsc/cjs-node16.tsconfig.json && tsc --noEmit -p test/import/tsc/esm-nodenext.tsconfig.json && tsc --noEmit -p test/import/tsc/bundler.tsconfig.json",
+    "test:lint": "eslint \"*.js\" \"{tools,lib,test,benchmarks}/**/*.js\"",
+    "test:tsc": "tsc --noEmit -p types/tsconfig.json",
+    "test:types": "eslint \"types/*.ts\"",
+    "test:cts": "node tools/generate-cts.js --check",
+    "test:types-prettier": "prettier --write \"types/*.ts\"",
+    "test:prettier": "prettier --write \"*.js\" \"{tools,lib,test,benchmarks}/**/*.js\"",
+    "prepublishOnly": "npm run build",
+    "coverage": "npm run coverage:test && npm run coverage:create && npm run coverage:send",
+    "coverage:test": "nyc vitest --no-file-parallelism --isolate --reporter=verbose run",
+    "coverage:report": "npm run coverage:create && npm run coverage:send",
+    "coverage:create": "nyc report --reporter=text-lcov > coverage.lcov",
+    "coverage:send": "./codecov --disable=gcov",
+    "benchmark": "node benchmarks/benchmarks-all.js",
+    "benchmark:setup": "npm install --no-save promise-mysql mysql2",
+    "generate": "node tools/generate-mariadb.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariadb-corporation/mariadb-connector-nodejs.git"
+  },
+  "keywords": [
+    "mariadb",
+    "mysql",
+    "client",
+    "driver",
+    "connector"
+  ],
+  "files": [
+    "lib",
+    "types/index.d.ts",
+    "types/callback.d.ts",
+    "types/share.d.ts",
+    "types/index.d.cts",
+    "types/callback.d.cts",
+    "types/share.d.cts",
+    "promise.js",
+    "check-node.js",
+    "callback.js",
+    "dist/"
+  ],
+  "engines": {
+    "node": ">= 20.0.0"
+  },
+  "author": "Diego Dupin <diego.dupin@mariadb.com>",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": {
+    "@types/geojson": "^7946.0.16",
+    "@types/node": ">=20",
+    "denque": "^2.1.0",
+    "iconv-lite": "^0.7.2",
+    "lru-cache": "^11.5.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
+    "chalk": "^5.6.0",
+    "error-stack-parser": "^2.1.4",
+    "esbuild": "^0.28.0",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-security": "^4.0.1",
+    "nyc": "^18.0.0",
+    "prettier": "^3.8.0",
+    "tinybench": "^6.0.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0",
+    "winston": "^3.19.0"
+  },
+  "bugs": {
+    "url": "https://jira.mariadb.org/projects/CONJS/"
+  },
+  "homepage": "https://github.com/mariadb-corporation/mariadb-connector-nodejs#readme"
+}

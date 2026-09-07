@@ -1,5 +1,6 @@
 {
     "name": "myshare",
+    "packageManager": "pnpm@11.3.0",
     "scripts": {
         "dev": "docker compose -f compose.yml -f compose.dev.yml up",
         "dev:build": "docker compose -f compose.yml -f compose.dev.yml build",
