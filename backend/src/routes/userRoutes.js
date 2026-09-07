@@ -21,7 +21,7 @@ var transporter = nodemailer.createTransport({
 // The site administrator can disable registration by configuring the .env file. (ALLOW_REGISTERING)
 // **
 router.post('/users', async (req, res) => {
-    let { username, email, password } = req.body;
+    const { username, email, password } = req.body;
     try {
         const userRepo = AppDataSource.getRepository('User');
         if (process.env.ALLOW_REGISTERING == 'false') {
@@ -96,7 +96,7 @@ router.post('/users/accountrecovery', async (req, res) => {
         `,
     };
 
-    transporter.sendMail(mail, function (error, info) {
+    transporter.sendMail(mail, function (error) {
         if (error) {
             console.log(error);
             return res.status(500).json({ error: 'Failed to send recovery email.' });

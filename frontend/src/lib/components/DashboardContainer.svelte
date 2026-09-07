@@ -18,15 +18,15 @@
     let myNotes = $state<Note[]>([]);
     let publicNotes = $state<Note[]>([]);
     let activeTab = $state<'notes' | 'public' | 'settings'>('notes'); // work in progress
-    let isLoadingMyNotes = $state(false);
-    let isLoadingPublicNotes = $state(false);
+    // let isLoadingMyNotes = $state(false);
+    // let isLoadingPublicNotes = $state(false);
 
     async function loadMyNotes() {
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
         if (!token) return;
 
-        isLoadingMyNotes = true;
+        //   isLoadingMyNotes = true;
         try {
             const res = await fetch('/api/notes/get', {
                 method: 'GET',
@@ -43,12 +43,12 @@
         } catch (err) {
             console.error('Failed to load user notes:', err);
         } finally {
-            isLoadingMyNotes = false;
+            //    isLoadingMyNotes = false;
         }
     }
 
     async function loadPublicNotes() {
-        isLoadingPublicNotes = true;
+        //   isLoadingPublicNotes = true;
         try {
             const res = await fetch('/api/notes/public');
             if (res.ok) {
@@ -58,7 +58,7 @@
         } catch (err) {
             console.error('Failed to load public notes:', err);
         } finally {
-            isLoadingPublicNotes = false;
+            //  isLoadingPublicNotes = false;
         }
     }
 
