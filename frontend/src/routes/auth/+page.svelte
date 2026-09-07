@@ -38,6 +38,7 @@
                     }
                     traceback = `Error: ${response.status} ${response.statusText}`;
                 }
+                // eslint-disable-next-line
                 const responseData = await response.json();
                 // TODO: Return session token and redirect to home page
             } else {
@@ -61,6 +62,7 @@
                 const data = await response.json();
 
                 localStorage.setItem('token', data.token);
+                // eslint-disable-next-line
                 goto('/');
             }
         } catch (error) {
