@@ -50,20 +50,6 @@ AppDataSource.initialize()
         coreLogMessage('Error while initializing server: ', error.message);
     });
 
-// **
-// Gets the current version hash from GitHub
-// **
-app.get('/api/version', async (req, res) => {
-    try {
-        const ghRes = await fetch('https://api.github.com/repos/byeoon/MyShare/commits/main', {
-            headers: { 'User-Agent': 'MyShare' },
-        });
-        const data = await ghRes.json();
-        res.json({ commit: data.sha?.slice(0, 7) || 'dev' });
-    } catch (e) {
-        res.json({ commit: 'dev' });
-    }
-});
 
 // **
 // Verifies user token, security measure.
