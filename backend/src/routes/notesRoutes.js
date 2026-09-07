@@ -98,6 +98,7 @@ router.get('/notes/get', verifyToken, async (req, res) => {
         const noteRepo = AppDataSource.getRepository('Note');
         const [notes, count] = await noteRepo.findAndCountBy({ userId: userId });
         const formattedNotes = notes.map((note) => {
+            // eslint-disable-next-line
             let parsedTags = [];
             try {
                 parsedTags = JSON.parse(note.tags);
@@ -142,6 +143,7 @@ router.get('/notes/public', async (req, res) => {
         });
 
         const formattedNotes = notes.map((note) => {
+            // eslint-disable-next-line
             let parsedTags = [];
             try {
                 parsedTags = JSON.parse(note.tags);
@@ -219,8 +221,10 @@ router.get('/notes/:id', async (req, res) => {
         try {
             note.tags = JSON.parse(note.tags);
             if (!Array.isArray(note.tags)) {
+
                 note.tags = note.tags ? [{ text: note.tags, color: '#570df8bb' }] : [];
             }
+            // eslint-disable-next-line
         } catch (e) {
             note.tags = note.tags ? [{ text: note.tags, color: '#570df8bb' }] : [];
         }

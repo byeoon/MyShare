@@ -11,6 +11,7 @@
             <h1 class="text-2xl text-center">{page.error!.message}</h1>
             <p class="py-6 text-center">You are not supposed to be here... go back?</p>
             <center>
+                <!-- eslint-disable-next-line -->
                 <a href="/"><button class="btn btn-neutral px-10">Dashboard</button> </a>
             </center>
         </div>
