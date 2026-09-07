@@ -27,8 +27,7 @@ router.post('/users', async (req, res) => {
         const userRepo = AppDataSource.getRepository('User');
         if (process.env.ALLOW_REGISTERING == 'false') {
             return res.status(400).json({
-                error:
-                    'Registering is not allowed. Please contact the site administrator for more information.',
+                error: 'Registering is not allowed. Please contact the site administrator for more information.',
             });
         }
 
