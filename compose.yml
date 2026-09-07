@@ -1,0 +1,64 @@
+services:
+    proxy:
+        image: caddy:2-alpine
+        restart: unless-stopped
+        ports:
+            - '${HTTP_PORT:-80}:80'
+            - '${HTTPS_PORT:-443}:443'
+        environment:
+            APP_DOMAIN: ${APP_DOMAIN:-:80}
+            FRONTEND_UPSTREAM: frontend:3000
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile:ro
+            - caddy_data:/data
+            - caddy_config:/config
+        depends_on:
+            - frontend
+            - backend
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        restart: unless-stopped
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        depends_on:
+            db:
+                condition: service_healthy
+        environment:
+            NODE_ENV: production
+            PORT: 8000
+            HOST: 0.0.0.0
+            DB_HOST: db
+            DB_PORT: 3306
+            DB_USERNAME: ${DB_USERNAME:-mariadb}
+            DB_PASSWORD: ${DB_PASSWORD:-MakeASecurePassword999!}
+            DATABASE: ${DATABASE:-myshare}
+            JWT_SECRET: ${JWT_SECRET:-change_this_jwt_secret}
+
+    db:
+        image: mariadb
+        restart: unless-stopped
+        environment:
+            MARIADB_DATABASE: myshare
+            MARIADB_USER: mariadb
+            MARIADB_PASSWORD: ${DB_PASSWORD:-MakeASecurePassword999!}
+            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-change_this_root_password}
+        volumes:
+            - mariadb_data:/var/lib/mysql
+            - ./setup_database.sql:/docker-entrypoint-initdb.d/setup_database.sql
+        healthcheck:
+            test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    mariadb_data:
+    caddy_data:
+    caddy_config:

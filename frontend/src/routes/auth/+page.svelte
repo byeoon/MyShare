@@ -1,0 +1,227 @@
+<script lang="ts">
+    import './auth.css';
+    import Stats from '$lib/components/Stats.svelte';
+    import { mode } from 'mode-watcher';
+    import { goto } from '$app/navigation';
+
+    import myshare_black from '$lib/assets/myshare_black.png';
+    import myshare_white from '$lib/assets/myshare_white.png';
+
+    let email: string;
+    let username: string;
+    let password: string;
+    let traceback: string | null = null;
+
+    let authType: 'login' | 'register' = 'login';
+
+    async function postToServer() {
+        const userData = {
+            email,
+            username,
+            password,
+        };
+        try {
+            if (authType === 'register') {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+                if (!response.ok) {
+                    if (response.status === 400) {
+                        const errorData = await response.json();
+                        traceback = `Error: ${errorData.error}`;
+                    } else {
+                        traceback = `Error: ${response.status} ${response.statusText}`;
+                    }
+                    traceback = `Error: ${response.status} ${response.statusText}`;
+                }
+                const responseData = await response.json();
+                // TODO: Return session token and redirect to home page
+            } else {
+                const response = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        const errorData = await response.json();
+                        traceback = `Error: ${errorData.error}`;
+                    } else {
+                        traceback = `Error: ${response.status} ${response.statusText}`;
+                    }
+                    return;
+                }
+                const data = await response.json();
+
+                localStorage.setItem('token', data.token);
+                goto('/');
+            }
+        } catch (error) {
+            console.error('Error posting to server:', error);
+            traceback = `Error: ${error}`;
+        }
+    }
+</script>
+
+<div
+    class="hero bg-base-200 min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"
+>
+    <div class="flex flex-col gap-4 items-center relative z-10">
+        <div class="card-scene w-96">
+            <div class="card-flipper" class:is-flipped={authType === 'register'}>
+                <div
+                    class="card-face card-front card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-full shadow-xl"
+                    inert={authType === 'register'}
+                >
+                    <div class="card-body">
+                        <div
+                            class="container"
+                            style="
+                                display: grid;
+                                align-items: center;
+                                grid-template-columns: 1fr 1fr 1fr;
+                                column-gap: 2px;
+                                padding: 8px;
+                            "
+                        >
+                            <img
+                                src={mode.current == 'dark' ? myshare_white : myshare_black}
+                                style="height: 64px; width: 64px"
+                                alt="myshare logo"
+                            />
+                            <h2 class="text-2xl font-bold py-2">Login</h2>
+                        </div>
+
+                        <input
+                            id="email"
+                            placeholder="Email"
+                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={email}
+                        />
+                        <input
+                            id="pw"
+                            type="password"
+                            placeholder="Password"
+                            class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={password}
+                        />
+                        <button
+                            class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
+                            style="padding: 20px"
+                            id="login"
+                            type="submit"
+                            onclick={postToServer}
+                        >
+                            Login
+                        </button>
+                        {#if traceback && authType === 'login'}
+                            <p class="text-red-600 dark:text-red-400 text-center mt-2">
+                                {traceback}
+                            </p>
+                        {/if}
+                        <div class="divider"></div>
+                        <div class="text-center">
+                            <p class="text-center">
+                                Don't have an account?
+                                <button
+                                    type="button"
+                                    class="link link-primary inline p-0 bg-transparent border-0 cursor-pointer"
+                                    onclick={() => {
+                                        authType = 'register';
+                                        traceback = null;
+                                    }}
+                                >
+                                    Register!
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="card-face card-back card card-border bg-base-300/80 backdrop-blur-2xl border-base-100 w-full shadow-xl"
+                    inert={authType === 'login'}
+                >
+                    <div class="card-body">
+                        <div
+                            class="container"
+                            style="
+                                display: grid;
+                                align-items: center;
+                                grid-template-columns: 1fr 1fr 1fr;
+                                column-gap: 2px;
+                                padding: 8px;
+                            "
+                        >
+                            <img
+                                src={mode.current == 'dark' ? myshare_white : myshare_black}
+                                style="height: 64px; width: 64px"
+                                alt="myshare logo"
+                            />
+                            <h2 class="text-2xl font-bold py-2">Register</h2>
+                        </div>
+
+                        <input
+                            id="email-register"
+                            placeholder="Email"
+                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={email}
+                        />
+                        <input
+                            id="username-register"
+                            placeholder="Username"
+                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={username}
+                        />
+                        <input
+                            id="pw-register"
+                            type="password"
+                            placeholder="Password"
+                            class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
+                            bind:value={password}
+                        />
+                        <button
+                            class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
+                            style="padding: 20px"
+                            id="register-btn"
+                            type="submit"
+                            onclick={postToServer}
+                        >
+                            Register
+                        </button>
+                        {#if traceback && authType === 'register'}
+                            <p class="text-red-600 dark:text-red-400 text-center mt-2">
+                                {traceback}
+                            </p>
+                        {/if}
+                        <div class="divider"></div>
+                        <div class="text-center">
+                            <p class="text-center">
+                                Already have an account?
+                                <button
+                                    type="button"
+                                    class="link link-primary inline p-0 bg-transparent border-0 cursor-pointer"
+                                    onclick={() => {
+                                        authType = 'login';
+                                        traceback = null;
+                                    }}
+                                >
+                                    Login!
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <Stats />
+    </div>
+</div>

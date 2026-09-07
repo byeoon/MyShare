@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard</title>
+        <link href="/css/app.css" rel="stylesheet" />
+        <link rel="icon" type="image/x-icon" href="/img/favicon/favicon.ico" />
+        <style>
+            .multiline {
+                white-space: pre-wrap;
+            }
+        </style>
+    </head>
+
+    <input type="checkbox" id="image_modal_toggle" class="modal-toggle" />
+    <div class="modal" role="dialog" id="image_preview_modal">
+        <div class="modal-box max-w-5xl p-0 bg-transparent shadow-none border-none relative">
+            <label
+                for="image_modal_toggle"
+                class="btn btn-sm btn-circle absolute right-2 top-2 z-10"
+                >✕</label
+            >
+            <img id="modal_image_display" src="" class="w-full h-auto rounded-lg shadow-2xl" />
+        </div>
+        <label class="modal-backdrop" for="image_modal_toggle">Close</label>
+    </div>
+
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+        <div
+            class="drawer-content bg-base-200 flex flex-col items-center justify-start min-h-screen pt-8"
+        >
+            <input type="checkbox" id="my_modal_6" class="modal-toggle" />
+            <div class="modal backdrop-blur-sm" role="dialog">
+                <div
+                    class="modal-box bg-base-300/95 backdrop-blur-2xl border border-base-content/10 shadow-2xl rounded-2xl p-8 max-w-2xl max-h-[90vh] overflow-y-auto space-y-6 relative"
+                >
+                    <div>
+                        <h2 class="text-2xl font-bold text-base-content">Create a Note</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label
+                                class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider mb-1.5 block"
+                                >Title <span class="text-error">*</span></label
+                            >
+                            <input
+                                type="text"
+                                id="shareInput_title"
+                                placeholder="Give your note a title..."
+                                class="input input-bordered w-full bg-base-200/60 focus:border-primary transition-colors font-medium"
+                                maxlength="32"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider mb-1.5 block"
+                                >Content <span class="text-error">*</span></label
+                            >
+                            <textarea
+                                class="textarea textarea-bordered w-full h-32 bg-base-200/60 focus:border-primary transition-colors text-sm leading-relaxed p-3.5"
+                                id="shareInput_content"
+                                placeholder="Write your note content here..."
+                                maxlength="2000"
+                                required
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-base-content/5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label
+                                class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider block"
+                                >Attachment Option</label
+                            >
+                            <select
+                                id="attachmentTypeSelect"
+                                class="select select-bordered select-sm bg-base-200/60 font-medium"
+                                onchange="toggleAttachmentMode()"
+                            >
+                                <option value="upload" selected>Upload Local File</option>
+                                <option value="link">Direct Link URL</option>
+                            </select>
+                        </div>
+
+                        <div id="attachmentModeUpload" class="transition-all">
+                            <input
+                                type="file"
+                                id="shareInput_fileUpload"
+                                name="file"
+                                class="file-input file-input-bordered file-input-sm w-full bg-base-200/60"
+                            />
+                            <span class="text-[11px] text-base-content/50 mt-1 block"
+                                >Max size: 1GB</span
+                            >
+                        </div>
+
+                        <div id="attachmentModeLink" class="hidden transition-all">
+                            <input
+                                type="text"
+                                id="shareInput_file"
+                                placeholder="https://example.com/image.png"
+                                class="input input-bordered input-sm w-full h-9 bg-base-200/60 focus:border-primary transition-colors"
+                            />
+                            <span class="text-[11px] text-base-content/50 mt-1 block"
+                                >Paste an image or file URL directly</span
+                            >
+                        </div>
+                    </div>
+
+                    <div id="tagBuilder" class="pt-3 border-t border-base-content/5 space-y-3">
+                        <label
+                            class="label text-xs font-semibold text-base-content/80 uppercase tracking-wider block"
+                        >
+                            Tags</label
+                        >
+                        <div class="flex items-center gap-2.5">
+                            <input
+                                type="text"
+                                id="tagInput_text"
+                                placeholder="Tag Name (high priority, work, personal)"
+                                class="input input-bordered input-sm flex-1 bg-base-200/60 focus:border-primary transition-colors"
+                            />
+                            <div
+                                class="flex items-center gap-1.5 bg-base-200/60 border border-base-content/10 rounded-lg px-2.5 py-1"
+                            >
+                                <input
+                                    type="color"
+                                    id="tagInput_color"
+                                    value="#570df8"
+                                    class="w-6 h-6 p-0 border-0 rounded cursor-pointer bg-transparent"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-primary shadow-sm px-4 font-bold"
+                                onclick="addTag()"
+                            >
+                                Add Tag
+                            </button>
+                        </div>
+                        <div
+                            id="tagList"
+                            class="flex flex-wrap gap-2 min-h-[1.5rem] p-2 rounded-xl bg-base-200/30 border border-base-content/5 empty:hidden"
+                        ></div>
+                    </div>
+
+                    <div class="space-y-3 pt-2 border-t border-base-content/5">
+                        <div
+                            class="flex items-center justify-between p-4 bg-base-200/50 rounded-xl border border-base-content/5"
+                        >
+                            <div>
+                                <span class="text-sm font-bold text-base-content block"
+                                    >Private Note</span
+                                >
+                                <span class="text-xs text-base-content/60 mt-0.5 block"
+                                    >Only visible to you unless shared via direct link</span
+                                >
+                            </div>
+                            <input
+                                type="checkbox"
+                                id="shareInput_visibility"
+                                checked="checked"
+                                class="checkbox checkbox-primary shadow-sm"
+                            />
+                        </div>
+
+                        <div
+                            class="p-4 bg-base-200/50 rounded-xl border border-base-content/5 space-y-3"
+                        >
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-sm font-bold text-base-content block"
+                                        >Decaying Note</span
+                                    >
+                                    <span class="text-xs text-base-content/60 mt-0.5 block"
+                                        >Automatically delete this note after a set duration</span
+                                    >
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    id="shareInput_decaying"
+                                    class="checkbox checkbox-primary shadow-sm"
+                                    onchange="toggleDecayDropdown()"
+                                />
+                            </div>
+
+                            <div
+                                id="decayDropdownContainer"
+                                class="hidden pt-3 border-t border-base-content/5 flex items-center justify-between"
+                            >
+                                <span class="text-xs font-semibold text-base-content/80"
+                                    >Expiration Duration:</span
+                                >
+                                <select
+                                    id="shareInput_decayTime"
+                                    class="select select-bordered select-sm bg-base-300/80 font-medium"
+                                >
+                                    <option value="1">1 day</option>
+                                    <option value="7" selected>7 days</option>
+                                    <option value="30">30 days</option>
+                                    <option value="90">90 days</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="modal-action pt-4 border-t border-base-content/10 flex justify-end gap-3"
+                    >
+                        <label
+                            for="my_modal_6"
+                            class="btn btn-ghost hover:bg-base-200 px-6 font-medium cursor-pointer"
+                            >Cancel</label
+                        >
+                        <label
+                            for="my_modal_6"
+                            class="btn btn-primary px-8 shadow-lg shadow-primary/30 font-bold cursor-pointer"
+                            onClick="saveShare()"
+                            >Create Note</label
+                        >
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="tabs tabs-lifted tabs-lg w-full max-w-6xl px-4">
+                <input
+                    type="radio"
+                    name="dashboard_tabs"
+                    class="tab [--tab-bg:var(--color-base-300)] text-lg font-bold h-16"
+                    aria-label="📝 Your Notes"
+                    checked="checked"
+                />
+                <div class="tab-content bg-base-300 border-base-300 rounded-box p-10 shadow-inner">
+                    <div id="notes" class="flex flex-wrap gap-8 justify-center">
+                        <!--Notes are placed inside here-->
+                    </div>
+                </div>
+
+                <input
+                    type="radio"
+                    name="dashboard_tabs"
+                    class="tab [--tab-bg:var(--color-base-300)] text-lg font-bold h-16"
+                    aria-label="🌐 Instance Notes"
+                />
+                <div class="tab-content bg-base-300 border-base-300 rounded-box p-10 shadow-inner">
+                    <div id="public-notes" class="flex flex-wrap gap-8 justify-center">
+                        <!--Public notes are placed inside here-->
+                    </div>
+                </div>
+
+                <input
+                    type="radio"
+                    name="dashboard_tabs"
+                    class="tab [--tab-bg:var(--color-base-300)] text-lg font-bold h-16"
+                    aria-label="⚙️ Settings"
+                />
+                <div class="tab-content bg-base-300 border-base-300 rounded-box p-10 shadow-inner">
+                    <div class="flex flex-col justify-between min-h-[500px] w-full">
+                        <div
+                            class="flex flex-col items-center justify-center py-20 text-base-content/50 my-auto"
+                        >
+                            <p class="text-xl font-bold">Settings</p>
+                            <p>Configuration options will appear here. Soon.</p>
+                        </div>
+                        <div
+                            class="pt-6 border-t border-base-content/10 flex items-center justify-between text-xs font-mono text-base-content/50 w-full"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="drawer-side">
+            <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+            <ul
+                class="menu bg-base-200/90 backdrop-blur-2xl border-r border-base-content/10 text-base-content min-h-full w-80 p-4"
+            >
+                <h3 id="hellousername" class="text-lg font-bold p-2">Hello, {undefined}</h3>
+                <label
+                    for="my_modal_6"
+                    class="btn btn-primary shadow-md shadow-primary/20 font-bold"
+                    >Create a Note</label
+                >
+                <li class=""></li>
+                <li>
+                    <a class="hover:bg-base-300/50 transition-colors">Embed Configuration (WIP)</a>
+                </li>
+                <li class=""></li>
+                <li>
+                    <a
+                        class="text-error font-medium hover:bg-error/10 transition-colors cursor-pointer"
+                        id="deleteMode"
+                        >Manage Notes</a
+                    >
+                </li>
+                <li>
+                    <a
+                        class="text-error font-medium hover:bg-error/10 transition-colors cursor-pointer"
+                        onClick="logout()"
+                        >Logout</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </div>
+</html>
+<script>
+    function toggleDecayDropdown() {
+        var check = document.getElementById('shareInput_decaying');
+        var container = document.getElementById('decayDropdownContainer');
+        if (!check || !container) return;
+        if (check.checked) {
+            container.classList.remove('hidden');
+        } else {
+            container.classList.add('hidden');
+        }
+    }
+
+    function toggleAttachmentMode() {
+        var select = document.getElementById('attachmentTypeSelect');
+        var uploadBox = document.getElementById('attachmentModeUpload');
+        var linkBox = document.getElementById('attachmentModeLink');
+        var fileInput = document.getElementById('shareInput_fileUpload');
+        var urlInput = document.getElementById('shareInput_file');
+
+        if (!select || !uploadBox || !linkBox) return;
+
+        if (select.value === 'upload') {
+            uploadBox.classList.remove('hidden');
+            linkBox.classList.add('hidden');
+            if (urlInput) urlInput.value = '';
+        } else if (select.value === 'link') {
+            uploadBox.classList.add('hidden');
+            linkBox.classList.remove('hidden');
+            if (fileInput) fileInput.value = '';
+        } else {
+            uploadBox.classList.add('hidden');
+            linkBox.classList.add('hidden');
+            if (fileInput) fileInput.value = '';
+            if (urlInput) urlInput.value = '';
+        }
+    }
+
+    async function loadVersionInfo() {
+        try {
+            const res = await fetch('/api/version');
+            if (res.ok) {
+                const data = await res.json();
+                const badge = document.getElementById('commitBadge');
+                if (badge && data.commit) {
+                    badge.innerText = data.commit;
+                    badge.href = `https://github.com/byeoon/MyShare/commit/${data.commit}`;
+                }
+            }
+        } catch (e) {
+            console.log('Could not load version');
+        }
+    }
+
+    async function isLoggedIn() {
+        try {
+            const response = await fetch('/api/email', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: localStorage.getItem('token'),
+                },
+            });
+            if (!response.ok) {
+                throw new Error('You are not authenticated!');
+                console.log(err);
+                window.location.replace('/login.html');
+            }
+
+            const responseData = await response.json();
+            document.getElementById('hellousername').innerHTML = `Hello, ${responseData.username}`;
+            localStorage.setItem('userId', responseData.userId);
+            loadShares();
+            loadVersionInfo();
+        } catch (error) {
+            console.log('Error while authenticating:', error);
+            window.location.replace('/login.html');
+        }
+    }
+    let currentTags = [];
+
+    function tagBadgeColorGet(hexcolor) {
+        hexcolor = hexcolor.replace('#', '');
+        var r = parseInt(hexcolor.substr(0, 2), 16);
+        var g = parseInt(hexcolor.substr(2, 2), 16);
+        var b = parseInt(hexcolor.substr(4, 2), 16);
+        var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+        return yiq >= 128 ? 'black' : 'white';
+    }
+
+    function addTag() {
+        const text = document.getElementById('tagInput_text').value.trim();
+        const color = document.getElementById('tagInput_color').value;
+        if (text === '') return;
+
+        currentTags.push({ text, color });
+        document.getElementById('tagInput_text').value = '';
+        renderTagList();
+    }
+
+    function removeTag(index) {
+        currentTags.splice(index, 1);
+        renderTagList();
+    }
+
+    function renderTagList() {
+        const tagList = document.getElementById('tagList');
+        tagList.innerHTML = '';
+        currentTags.forEach((tag, index) => {
+            const tagBadge = document.createElement('div');
+            tagBadge.className = 'badge badge-primary gap-2 p-3';
+            tagBadge.style.backgroundColor = tag.color;
+            tagBadge.style.borderColor = tag.color;
+            tagBadge.style.color = tagBadgeColorGet(tag.color);
+            tagBadge.innerHTML = `${tag.text} <button type="button" class="btn btn-ghost btn-xs h-4 w-4 min-h-0 p-0" onclick="removeTag(${index})">✕</button>`;
+            tagList.appendChild(tagBadge);
+        });
+    }
+
+    isLoggedIn();
+
+    async function saveShare() {
+        let textcontent = document.getElementById('shareInput_content').value;
+        let title = document.getElementById('shareInput_title').value;
+        let file = document.getElementById('shareInput_file').value;
+        let fileUploaded = document.getElementById('shareInput_fileUpload').files[0];
+        let tags = currentTags;
+        let visible = document.getElementById('shareInput_visibility').checked;
+
+        if (fileUploaded != null) {
+            const formData = new FormData();
+            formData.append('file', fileUploaded);
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (response.ok) {
+                    const uploadData = await response.json();
+                    file = `/uploads/${uploadData.filename}`;
+                    // alert("upload complete");
+                } else {
+                    console.error('Upload failed');
+                }
+            } catch (error) {
+                console.error('Error during upload:', error);
+            }
+        }
+
+        let decaying = document.getElementById('shareInput_decaying')
+            ? document.getElementById('shareInput_decaying').checked
+            : false;
+        let decayTime = document.getElementById('shareInput_decayTime')
+            ? document.getElementById('shareInput_decayTime').value
+            : '7';
+
+        const userData = {
+            title: title,
+            content: textcontent,
+            file: file,
+            tags: tags,
+            visibility: visible,
+            decaying: decaying,
+            decayTime: decaying ? parseInt(decayTime) : null,
+        };
+
+        try {
+            const response = await fetch('/api/notes/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization-id': localStorage.getItem('userId'),
+                    authorization: localStorage.getItem('token'),
+                },
+                body: JSON.stringify(userData),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'There was an error with creating your note.');
+            }
+            const responseData = await response.json();
+            currentTags = [];
+            renderTagList();
+            loadShares();
+            loadPublicShares();
+        } catch (error) {
+            console.error('err:', error);
+        }
+    }
+
+    async function loadShares() {
+        try {
+            const response = await fetch('/api/notes/get', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: localStorage.getItem('token'),
+                    'authorization-id': localStorage.getItem('userId'),
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch notes');
+            }
+            const responseData = await response.json();
+            const notesContainer = document.getElementById('notes');
+            notesContainer.innerHTML = '';
+
+            responseData.notes.forEach((note) => {
+                const smallnote =
+                    note.content.length > 60
+                        ? note.content.substring(0, 80) + '....'
+                        : note.content;
+                let tagsHtml = '';
+                if (Array.isArray(note.tags)) {
+                    note.tags.forEach((tag) => {
+                        const fontColor = tagBadgeColorGet(tag.color);
+                        tagsHtml += `<div class="badge border-none hover:scale-105 transition-transform cursor-default" style="background-color: ${tag.color}; color: ${fontColor}">${tag.text}</div>`;
+                    });
+                }
+
+                const content = `
+                <div class="card bg-base-100/80 backdrop-blur-md w-96 shadow-xl border border-base-content/10 hover:border-primary/40 transition-colors">
+                    <div class="card-body">
+                        <h1 id="note-title" class="card-title text-2xl font-bold">
+                            ${note.title}
+                        </h1>
+                        <p id="note-content" class="multiline break-words">${smallnote}</p>
+                        <div id="badges" class="card-actions justify-end">
+                            ${tagsHtml}
+                        </div>   
+                        <div id="attachments" class="mt-2"> 
+                          ${(() => {
+                              if (!note.file) return '';
+                              const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(note.file);
+                              if (isImage) {
+                                  return `
+                                <div class="relative group cursor-pointer w-20 h-20 overflow-hidden rounded-lg border-2 border-primary/20 hover:border-primary transition-all" onclick="showPreview('${note.file}')">
+                                  <img src="${note.file}" class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              `;
+                              } else {
+                                  return `<a href="${note.file}" target="_blank" class="link link-primary flex items-center gap-1 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                View Attachment
+                              </a>`;
+                              }
+                          })()}
+                        </div>
+                        <a class="btn btn-primary btn-lg font-bold shadow-md shadow-primary/20" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-neutral btn-md border border-base-content/10" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                        <a class="delete-btn btn btn-error btn-sm hidden" onClick="deleteShare(${note.id})">Delete</a>
+                    </div>
+                    <div class="absolute top-2 right-2 text-sm text-base-content/40 font-mono">#${note.id}</div>
+                </div>
+            `;
+                notesContainer.innerHTML += content;
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function loadPublicShares() {
+        try {
+            const response = await fetch('/api/notes/public', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch public notes');
+            }
+            const responseData = await response.json();
+            const publicNotesContainer = document.getElementById('public-notes');
+            publicNotesContainer.innerHTML = '';
+
+            responseData.notes.forEach((note) => {
+                const smallnote =
+                    note.content.length > 60
+                        ? note.content.substring(0, 80) + '....'
+                        : note.content;
+                let tagsHtml = '';
+                if (Array.isArray(note.tags)) {
+                    note.tags.forEach((tag) => {
+                        const fontColor = tagBadgeColorGet(tag.color);
+                        tagsHtml += `<div class="badge border-none hover:scale-105 transition-transform cursor-default" style="background-color: ${tag.color}; color: ${fontColor}">${tag.text}</div>`;
+                    });
+                }
+
+                const content = `
+                <div class="card bg-base-100/80 backdrop-blur-md w-96 shadow-xl border border-base-content/10 hover:border-secondary/40 transition-colors">
+                    <div class="card-body">
+                        <div class="flex justify-between items-center mb-2">
+                           <span class="badge badge-secondary badge-sm pb-1 font-bold">@${note.author}</span>
+                           <div class="text-xs opacity-50 font-mono">#${note.id}</div>
+                        </div>
+                        <h1 id="note-title" class="card-title text-2xl font-bold">
+                            ${note.title}
+                        </h1>
+                        <p id="note-content" class="multiline break-words">${smallnote}</p>
+                        <div id="badges" class="card-actions justify-end">
+                            ${tagsHtml}
+                        </div>   
+                        <div id="attachments" class="mt-2"> 
+                          ${(() => {
+                              if (!note.file) return '';
+                              const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(note.file);
+                              if (isImage) {
+                                  return `
+                                <div class="relative group cursor-pointer w-20 h-20 overflow-hidden rounded-lg border-2 border-primary/20 hover:border-primary transition-all" onclick="showPreview('${note.file}')">
+                                  <img src="${note.file}" class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              `;
+                              } else {
+                                  return `<a href="${note.file}" target="_blank" class="link link-primary flex items-center gap-1 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                View Attachment
+                              </a>`;
+                              }
+                          })()}
+                        </div>
+                        <a class="btn btn-primary btn-lg font-bold shadow-md shadow-primary/20" onClick="viewNote(${note.id})">View</a>
+                        <a class="btn btn-neutral btn-md border border-base-content/10" onClick="copyToClipboard(\`${note.content}\`)">Copy Content</a>
+                    </div>
+                </div>
+            `;
+                publicNotesContainer.innerHTML += content;
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    loadShares();
+    loadPublicShares();
+
+    async function viewNote(id) {
+        const token = localStorage.getItem('token');
+        if (token) {
+            window.location.href = `/api/notes/${id}?token=${encodeURIComponent(token)}`;
+        } else {
+            window.location.href = `/api/notes/${id}`;
+        }
+    }
+
+    function showPreview(url) {
+        document.getElementById('modal_image_display').src = url;
+        document.getElementById('image_modal_toggle').checked = true;
+    }
+
+    async function deleteShare(id) {
+        const noteId = id;
+        const userData = {
+            noteId: noteId,
+            userId: localStorage.getItem('userId'),
+        };
+
+        try {
+            const response = await fetch(`/api/notes/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: localStorage.getItem('token'),
+                },
+                body: JSON.stringify(userData),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch notes');
+            }
+            loadShares(); // Reload shares since it's deleted now.
+        } catch (error) {
+            console.error('Error deleting note:', error);
+        }
+    }
+
+    function copyToClipboard(content) {
+        navigator.clipboard
+            .writeText(content)
+            .then(() => {
+                console.log('Copied! ' + content);
+            })
+            .catch((err) => {
+                console.log('Error copying text: ', err);
+            });
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        window.location.href = '/';
+    }
+
+    loadShares();
+
+    document.getElementById('deleteMode').addEventListener('click', function () {
+        const deleteBtns = document.querySelectorAll('.delete-btn');
+        deleteBtns.forEach((btn) => {
+            btn.classList.toggle('hidden');
+        });
+    });
+</script>
