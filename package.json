@@ -1,6 +1,7 @@
 {
     "name": "myshare",
     "packageManager": "pnpm@11.3.0",
+    "type": "module",
     "scripts": {
         "dev": "docker compose -f compose.yml -f compose.dev.yml up",
         "dev:build": "docker compose -f compose.yml -f compose.dev.yml build",
@@ -30,8 +31,13 @@
         "db:shell": "docker compose exec db sh"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "eslint": "^9.39.5",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-svelte": "^3.23.0",
+        "globals": "^17.12.0",
         "prettier": "^3.9.6",
-        "prettier-plugin-svelte": "^4.1.1"
+        "prettier-plugin-svelte": "^4.1.1",
+        "typescript-eslint": "^8.69.0"
     }
 }
