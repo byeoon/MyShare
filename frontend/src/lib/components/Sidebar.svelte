@@ -37,6 +37,34 @@
         localStorage.removeItem('userId');
         window.location.href = '/auth';
     }
+
+    function downloadShareXConfig() {
+        const token = localStorage.getItem('token');
+        const origin = window.location.origin;
+
+        const config = {
+            Version: '15.0.0',
+            Name: 'MyShare',
+            DestinationType: 'ImageUploader, TextUploader, FileUploader',
+            RequestMethod: 'POST',
+            RequestURL: `${origin}/api/upload`,
+            Headers: {
+                Authorization: token,
+            },
+            Body: 'MultipartFormData',
+            FileFormName: 'file',
+            URL: `${origin}/uploads/{json:filename}`,
+            ErrorMessage: '{json:error}',
+        };
+
+        const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'myshare.sxcu';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
 </script>
 
 <div class="drawer min-h-screen">
@@ -94,7 +122,9 @@
                 </label>
 
                 <ul class="menu p-0 gap-1">
-                    <li></li>
+                    <li>
+                        <button onclick={downloadShareXConfig}>Download ShareX Config</button>
+                    </li>
                     <li></li>
                 </ul>
             </div>
