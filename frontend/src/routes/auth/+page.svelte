@@ -83,37 +83,58 @@
                     inert={authType === 'register'}
                 >
                     <div class="card-body">
-                        <div
-                            class="container"
-                            style="
-                                display: grid;
-                                align-items: center;
-                                grid-template-columns: 1fr 1fr 1fr;
-                                column-gap: 2px;
-                                padding: 8px;
-                            "
-                        >
+                        <div class="flex items-center gap-2.5 pb-2">
                             <img
                                 src={mode.current == 'dark' ? myshare_white : myshare_black}
-                                style="height: 64px; width: 64px"
+                                class="h-8 w-8 object-contain"
                                 alt="myshare logo"
                             />
-                            <h2 class="text-2xl font-bold py-2">Login</h2>
+                            <h2 class="text-2xl font-bold">Login</h2>
                         </div>
 
-                        <input
-                            id="email"
-                            placeholder="Email"
-                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
-                            bind:value={email}
-                        />
-                        <input
-                            id="pw"
-                            type="password"
-                            placeholder="Password"
-                            class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
-                            bind:value={password}
-                        />
+                        <label class="input w-full mt-2 bg-base-200/60 backdrop-blur-sm">
+                            <svg
+                                class="h-[1em] opacity-50"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <g
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                    stroke-width="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                </g>
+                            </svg>
+                            <input id="email" type="email" placeholder="Email" bind:value={email} />
+                        </label>
+                        <label class="input w-full mt-2 bg-base-200/60 backdrop-blur-sm">
+                            <svg
+                                class="h-[1em] opacity-50"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <g
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                    stroke-width="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </g>
+                            </svg>
+                            <input
+                                id="pw"
+                                type="password"
+                                placeholder="Password"
+                                bind:value={password}
+                            />
+                        </label>
                         <button
                             class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
                             style="padding: 20px"
@@ -152,43 +173,86 @@
                     inert={authType === 'login'}
                 >
                     <div class="card-body">
-                        <div
-                            class="container"
-                            style="
-                                display: grid;
-                                align-items: center;
-                                grid-template-columns: 1fr 1fr 1fr;
-                                column-gap: 2px;
-                                padding: 8px;
-                            "
-                        >
+                        <div class="flex items-center gap-2.5 pb-2">
                             <img
                                 src={mode.current == 'dark' ? myshare_white : myshare_black}
-                                style="height: 64px; width: 64px"
+                                class="h-8 w-8 object-contain"
                                 alt="myshare logo"
                             />
-                            <h2 class="text-2xl font-bold py-2">Register</h2>
+                            <h2 class="text-2xl font-bold">Register</h2>
                         </div>
 
-                        <input
-                            id="email-register"
-                            placeholder="Email"
-                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
-                            bind:value={email}
-                        />
-                        <input
-                            id="username-register"
-                            placeholder="Username"
-                            class="input input-bordered mt-2 bg-base-200/60 backdrop-blur-sm"
-                            bind:value={username}
-                        />
-                        <input
-                            id="pw-register"
-                            type="password"
-                            placeholder="Password"
-                            class="input input-bordered p-4 mt-2 bg-base-200/60 backdrop-blur-sm"
-                            bind:value={password}
-                        />
+                        <label class="input w-full mt-2 bg-base-200/60 backdrop-blur-sm">
+                            <svg
+                                class="h-[1em] opacity-50"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <g
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                    stroke-width="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                </g>
+                            </svg>
+                            <input
+                                id="email-register"
+                                type="email"
+                                placeholder="Email"
+                                bind:value={email}
+                            />
+                        </label>
+                        <label class="input w-full mt-2 bg-base-200/60 backdrop-blur-sm">
+                            <svg
+                                class="h-[1em] opacity-50"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <g
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                    stroke-width="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </g>
+                            </svg>
+                            <input
+                                id="username-register"
+                                placeholder="Username"
+                                bind:value={username}
+                            />
+                        </label>
+                        <label class="input w-full mt-2 bg-base-200/60 backdrop-blur-sm">
+                            <svg
+                                class="h-[1em] opacity-50"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                            >
+                                <g
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                    stroke-width="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </g>
+                            </svg>
+                            <input
+                                id="pw-register"
+                                type="password"
+                                placeholder="Password"
+                                bind:value={password}
+                            />
+                        </label>
                         <button
                             class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
                             style="padding: 20px"
