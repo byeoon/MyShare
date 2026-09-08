@@ -4085,3 +4085,14 @@
     inherits: false;
     initial-value: 1;
 }
+
+.skeleton {
+    background-image: linear-gradient(
+        90deg,
+        var(--color-base-200) 0%,
+        var(--color-base-300) 40%,
+        var(--color-base-200) 80%
+    );
+    background-size: 200% 100%;
+    animation: skeleton 1.5s ease-in-out infinite;
+}
