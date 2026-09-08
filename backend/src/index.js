@@ -49,7 +49,6 @@ AppDataSource.initialize()
         console.log('Error while initializing server: ', error.message);
     });
 
-
 // **
 // Verifies user token, security measure.
 // **
