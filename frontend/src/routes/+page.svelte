@@ -1,7 +1,6 @@
 <script lang="ts">
     import Sidebar from '$lib/components/Sidebar.svelte';
-    import DashboardTabs from '$lib/components/DashboardTabs.svelte';
-    import CreateNote from '$lib/components/CreateNote.svelte';
+    import DashboardContainer from '$lib/components/DashboardContainer.svelte';
 
     // TODO: move to an asset folder so it is directly accessable, if possible
     function downloadShareXConfig() {
@@ -35,8 +34,12 @@
 
 <Sidebar>
     <div class="flex flex-col items-center justify-start w-full py-4">
-        <p class="text-lg font-bold">Welcome to the dashboard!</p>
-        <DashboardTabs />
+        <p class="text-lg font-bold">
+            This is text before the dashboard container. Feel free to add notifications here, or
+            something. (ex. if we do maintenancce)
+        </p>
+        <button onclick={downloadShareXConfig}> Download ShareX Config </button>
+        <DashboardContainer />
     </div>
     <CreateNote />
 </Sidebar>

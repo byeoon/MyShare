@@ -106,11 +106,19 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
+<<<<<<< HEAD
     console.log('Image upload complete: ' + req.file.filename);
+=======
+    coreLogMessage('Image upload complete: ' + req.file.filename);
+>>>>>>> d7cab30f17ab76d4e242bff020cf022ba6513c70
     res.json({
         filename: req.file.filename,
         url: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> d7cab30f17ab76d4e242bff020cf022ba6513c70
 });
 
 // **
