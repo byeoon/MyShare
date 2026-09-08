@@ -221,7 +221,6 @@ router.get('/notes/:id', async (req, res) => {
         try {
             note.tags = JSON.parse(note.tags);
             if (!Array.isArray(note.tags)) {
-
                 note.tags = note.tags ? [{ text: note.tags, color: '#570df8bb' }] : [];
             }
             // eslint-disable-next-line
