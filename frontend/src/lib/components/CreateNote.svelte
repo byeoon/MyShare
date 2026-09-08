@@ -4,7 +4,7 @@
 
 <button
     type="button"
-    class="fixed bottom-6 right-6 z-50 btn btn-circle btn-lg btn-primary shadow-xl hover:scale-105 active:scale-95 transition-all"
+    class="fixed bottom-6 right-6 z-0 btn btn-circle btn-lg btn-primary shadow-xl hover:scale-105 active:scale-95 transition-all"
     aria-label="Create Note"
     {onclick}
 >
