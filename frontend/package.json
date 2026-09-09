@@ -8,6 +8,10 @@
         "dev": "vite dev",
         "build": "vite build",
         "preview": "vite preview",
+        "//": "Allow a test setup while having no tests to run for futureproofing",
+        "test": "vitest run --passWithNoTests",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage",
         "prepare": "svelte-kit sync || echo ''",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
@@ -19,11 +23,14 @@
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.3.0",
+        "@vitest/coverage-v8": "^5.0.0",
+        "jsdom": "^30.0.1",
         "svelte": "^5.56.1",
         "svelte-check": "^4.6.0",
         "tailwindcss": "^4.3.0",
         "typescript": "^6.0.3",
-        "vite": "^8.0.16"
+        "vite": "^8.0.16",
+        "vitest": "^5.0.0"
     },
     "dependencies": {
         "mode-watcher": "^1.1.0"
