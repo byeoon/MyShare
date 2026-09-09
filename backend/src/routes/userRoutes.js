@@ -33,26 +33,24 @@ router.post('/users', async (req, res) => {
 
         const existing = await userRepo.findOneBy({ email });
         if (existing) {
-            return res.status(400).json({ message: 'User already exists!' });
+            return res.status(400).json({ message: 'This user already exists.' });
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        // eslint-disable-next-line
-        password = hashedPassword; // This feels insecure.
+        password = await bcrypt.hash(password, 10);
 
         const user = userRepo.create({ username, email, password });
         const newuser = await userRepo.save(user);
-        const secret = process.env.JWT_SECRET || 'secret';
+        const secret = process.env.JWT_SECRET || 'secret'; // TODO
         const userToken = jwt.sign({ email: user.email }, secret);
 
         res.cookie('token', userToken, {
             httpOnly: false,
             secure: false,
-            maxAge: 3600000 * 24 * 7,
-        }); // 7 days
-        res.status(201).json({ message: 'User created.', user: newuser, token: userToken });
+            maxAge: 3600000 * 24 * 14,
+        });
+        res.status(201).json({ message: 'Account created successfully.', user: newuser, token: userToken });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'internal error' });
+        res.status(500).json({ message: `An internal error occurred while trying to make your account. \n ${error}` });
     }
 });
 
@@ -71,11 +69,13 @@ router.post('/users/sendrecoveryemail', async (req, res) => {
 
     const secret = process.env.JWT_SECRET || 'secret';
     const token = jwt.sign({ email: user.email }, secret, { expiresIn: '15m' });
-    const recoveryLink = `${process.env.BASE_URL}/recovery.html?token=${token}`;
+    const recoveryLink = `${process.env.BASE_URL}/recovery.html?token=${token}`; // Will need changing.
 
     if (!process.env.EMAIL_NAME || !process.env.EMAIL_PASSWORD) {
-        console.log(`Link: ${recoveryLink}`);
-        return res.status(200).json({ message: 'Recovery link generated in console.' });
+        return res.status(200).json({
+            message: 'Your recovery link has been sent to the corresponding email.',
+            recoveryLinkForDebugReasonsRemoveLater: `${recoveryLink}`,
+        });
     }
 
     var mail = {
@@ -127,9 +127,7 @@ router.post('/users/resetpassword', async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
+        user.password = await bcrypt.hash(newPassword, 10);
         await userRepo.save(user);
         res.status(200).json({ message: 'Password has been successfully reset.' });
     } catch (error) {
@@ -141,26 +139,25 @@ router.post('/users/resetpassword', async (req, res) => {
 // **
 // This logs the user in by checking the email and if the hashed password matches.
 // If all conditions are met, the user gets a token and logs in.
+// Semi breaking change: This now takes email and password instead of username/password.
 // **
 router.post('/users/login', async (req, res) => {
     const { email, password } = req.body;
     const userRepo = AppDataSource.getRepository('User');
     const user = await userRepo.findOneBy({ email: email });
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-    // Could add better handling but not now
     if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
     if (!passwordMatch) {
-        return res.status(401).json({ error: 'Invalid password!' });
+        return res.status(401).json({ error: 'Invalid password' });
     }
 
-    const secret = process.env.JWT_SECRET || 'secret';
+    const secret = process.env.JWT_SECRET || 'secret'; // TODO
     const token = jwt.sign({ email: user.email }, secret);
     console.log('[✅] New user signed in');
-    return res.json({ token });
+    return res.json({ token }); // !!
 });
 
 // **
@@ -177,7 +174,7 @@ router.get('/getregistrationstatus', async (req, res) => {
         res.status(200).json({ message: 'Registration is allowed.' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'internal error' });
+        res.status(500).json({ message: 'Internal error.' });
     }
 });
 

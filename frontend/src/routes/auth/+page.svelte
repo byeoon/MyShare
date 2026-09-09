@@ -41,6 +41,7 @@
                 // eslint-disable-next-line
                 const responseData = await response.json();
                 // TODO: Return session token and redirect to home page
+                console.log(responseData);
             } else {
                 const response = await fetch('/api/users/login', {
                     method: 'POST',
