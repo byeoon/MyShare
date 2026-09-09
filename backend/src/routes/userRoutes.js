@@ -21,7 +21,8 @@ var transporter = nodemailer.createTransport({
 // The site administrator can disable registration by configuring the .env file. (ALLOW_REGISTERING)
 // **
 router.post('/users', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email } = req.body;
+    let { password } = req.body;
     try {
         const userRepo = AppDataSource.getRepository('User');
         if (process.env.ALLOW_REGISTERING == 'false') {
@@ -35,7 +36,6 @@ router.post('/users', async (req, res) => {
             return res.status(400).json({ message: 'User already exists!' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        // eslint-disable-next-line
         password = hashedPassword; // This feels insecure.
 
         const user = userRepo.create({ username, email, password });

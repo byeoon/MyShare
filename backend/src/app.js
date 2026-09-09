@@ -48,7 +48,7 @@ app.get('/api/version', async (req, res) => {
         });
         const data = await ghRes.json();
         res.json({ commit: data.sha?.slice(0, 7) || 'dev' });
-    } catch (e) {
+    } catch {
         res.json({ commit: 'dev' });
     }
 });
@@ -84,7 +84,7 @@ app.get('/api/email', verifyToken, async (req, res) => {
             email: user.email,
             username: user.username,
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -97,7 +97,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     res.json({ filename: req.file.filename });
 });
 
-app.use((req, res, next) => {
+app.use((req, res, _next) => {
     res.status(404).render('404', { message: 'Page Not Found' });
 });
 
