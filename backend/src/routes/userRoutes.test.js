@@ -143,27 +143,27 @@ describe('POST /api/users/accountrecovery', () => {
         repository.findOneBy.mockResolvedValue(null);
 
         const response = await request(app)
-            .post('/api/users/accountrecovery')
+            .post('/api/users/sendrecoveryemail')
             .send({ email: 'missing@example.com' });
 
         expect(response.status).toBe(401);
         expect(response.body).toEqual({ error: 'This email has not been registered.' });
     });
 
-    it('generates a recovery link when email is not configured', async () => {
+    it("generates a recovery link when sender email isn't configured", async () => {
         repository.findOneBy.mockResolvedValue({ email: 'user@example.com' });
         delete process.env.EMAIL_NAME;
         delete process.env.EMAIL_PASSWORD;
 
         const response = await request(app)
-            .post('/api/users/accountrecovery')
+            .post('/api/users/sendrecoveryemail')
             .send({ email: 'user@example.com' });
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ message: 'Recovery link generated in console.' });
     });
 
-    it('sends a recovery email when email is configured', async () => {
+    it('sends a recovery email when sender email is configured', async () => {
         process.env.EMAIL_NAME = 'sender@example.com';
         process.env.EMAIL_PASSWORD = 'password';
         repository.findOneBy.mockResolvedValue({ email: 'user@example.com' });
@@ -171,7 +171,7 @@ describe('POST /api/users/accountrecovery', () => {
         mailer.sendMail.mockImplementation((mail, callback) => callback(null, {}));
 
         const response = await request(app)
-            .post('/api/users/accountrecovery')
+            .post('/api/users/sendrecoveryemail')
             .send({ email: 'user@example.com' });
 
         expect(response.status).toBe(200);
