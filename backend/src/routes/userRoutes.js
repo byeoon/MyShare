@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 
 const router = express.Router();
 
+//TODO: Simplify email stuff
 var transporter = nodemailer.createTransport({
     host: 'smtp.mailgun.org',
     port: 587,
@@ -59,7 +60,7 @@ router.post('/users', async (req, res) => {
 // Starts the account recovery process.
 // Creates the recovery token and sends an email, if the email doesn't exist it gets output to the console.
 // **
-router.post('/users/accountrecovery', async (req, res) => {
+router.post('/users/sendrecoveryemail', async (req, res) => {
     const { email } = req.body;
     const userRepo = AppDataSource.getRepository('User');
     const user = await userRepo.findOneBy({ email: email });
