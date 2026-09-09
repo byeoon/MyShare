@@ -58,7 +58,7 @@ const verifyToken = (req, res, next) => {
         console.log('[!] User does not have a token.');
         return res.status(403).json({ error: 'You are not signed in.' });
     }
-    const secret = process.env.JWT_SECRET || 'secret';
+    const secret = process.env.JWT_SECRET || 'secret'; // TODO
     jwt.verify(token, secret, (err, decoded) => {
         if (err || !decoded || !decoded.email) {
             return res.status(401).json({ error: 'Unauthorized' });
@@ -92,11 +92,13 @@ app.get('/api/email', verifyToken, async (req, res) => {
 
 // **
 // Uploads a file.
-// !! BIG POTENTIAL SECURITY WARNING - NEEDS FIXING!!!
 // **
 app.post('/api/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
+    }
+    if (!req.user || !req.user.email) {
+        return res.status(401).json({ error: 'Unauthorized' });
     }
     console.log('[✅]  Image upload complete: ' + req.file.filename);
     res.json({ filename: req.file.filename });

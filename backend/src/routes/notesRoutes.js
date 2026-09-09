@@ -6,13 +6,11 @@ const router = express.Router();
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) {
-        console.log('[!] User does not have a token.');
         return res.status(403).json({ error: 'You are not signed in.' });
     }
-    const secret = process.env.JWT_SECRET || 'secret';
+    const secret = process.env.JWT_SECRET || 'secret'; // TODO
     jwt.verify(token, secret, (err, decoded) => {
         if (err || !decoded || !decoded.email) {
-            console.log('[!] User has invalid token.');
             return res.status(401).json({ error: 'Unauthorized' });
         }
         req.user = decoded;
@@ -23,10 +21,11 @@ const verifyToken = (req, res, next) => {
 // **
 // Creates a note. This is posted  with the values userId, title, content, file, tags, and visibility.
 // Title: Title of note
-// Content: Inner content of note / more details
+// Content: Full content of note
 // File: The image uploaded (or image link)
 // Tags: All available tags on the note
 // Visibility: Note visibility (public or private)
+// WARNING! There are plans to make file an array.
 // **
 router.post('/notes/create', verifyToken, async (req, res) => {
     const userId = req.headers['authorization-id'];
@@ -49,18 +48,17 @@ router.post('/notes/create', verifyToken, async (req, res) => {
                 .json({ message: 'Title exceeds maximum length of 32 characters.' });
         }
 
-        if (note.content.length > 2000) {
+        if (note.content.length > 6000) {
             return res
                 .status(400)
-                .json({ message: 'Content exceeds maximum length of 2000 characters.' });
+                .json({ message: 'Content exceeds maximum length of 6000 characters.' });
         }
-
         const newNote = await noteRepo.save(note);
 
         res.status(201).json({ message: 'Note created successfully!', note: newNote });
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ message: 'internal error' });
+        res.status(500).json({ message: 'Internal Error' });
     }
 });
 
@@ -77,7 +75,6 @@ router.post('/notes/delete', verifyToken, async (req, res) => {
         const note = await noteRepo.findOneBy({ id: noteId });
 
         if (note.userId != userId) {
-            console.log(`[!!] UserID ${userId} tried to delete a note that wasn't theirs.`);
             return res.status(403).json({ message: "You cannot delete notes that aren't yours." });
         }
         noteRepo.remove(note);
@@ -89,6 +86,7 @@ router.post('/notes/delete', verifyToken, async (req, res) => {
 });
 
 // **
+// might be replaced or integrated with /notes/public ? This is very unclear
 // Gets all the notes of all users(?) This is called with the same values as createNote.
 // Maps all note values and also gets the userid.
 // **
@@ -191,9 +189,6 @@ router.get('/notes/:id', async (req, res) => {
 
         if (note.visibility == true) {
             if (!token) {
-                console.log(
-                    `[!!] Unauthorized access attempt to private note #${noteId} (No token)`,
-                );
                 return res
                     .status(403)
                     .json({ message: 'You do not have access to this private note.' });
@@ -221,11 +216,11 @@ router.get('/notes/:id', async (req, res) => {
         try {
             note.tags = JSON.parse(note.tags);
             if (!Array.isArray(note.tags)) {
-                note.tags = note.tags ? [{ text: note.tags, color: '#570df8bb' }] : [];
+                note.tags = note.tags ? [{ text: note.tags, color: '#3240ffbb' }] : [];
             }
             // eslint-disable-next-line
         } catch (e) {
-            note.tags = note.tags ? [{ text: note.tags, color: '#570df8bb' }] : [];
+            note.tags = note.tags ? [{ text: note.tags, color: '#3240ffbb' }] : [];
         }
 
         res.render('note', { note });
