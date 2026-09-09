@@ -15,7 +15,7 @@ vi.mock(
         securityLogMessage: vi.fn(),
         notesLogMessage: vi.fn(),
     }),
-    { virtual: true }
+    { virtual: true },
 );
 
 const bcrypt = require('bcrypt');

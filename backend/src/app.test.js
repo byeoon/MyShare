@@ -22,7 +22,7 @@ vi.mock(
         securityLogMessage: vi.fn(),
         notesLogMessage: vi.fn(),
     }),
-    { virtual: true }
+    { virtual: true },
 );
 
 const AppDataSource = require('./database');
@@ -77,7 +77,7 @@ describe('GET /api/email', () => {
                 'fetch',
                 vi.fn().mockResolvedValue({
                     json: async () => ({ sha: '123456789abcdef' }),
-                })
+                }),
             );
 
             const response = await request(app).get('/api/version');
@@ -112,7 +112,9 @@ describe('GET /api/email', () => {
 
             expect(response.status).toBe(200);
             expect(response.body.filename).toMatch(/^file-\d+-\d+\.txt$/);
-            await expect(fs.access(path.join(uploadsDir, response.body.filename))).resolves.toBeUndefined();
+            await expect(
+                fs.access(path.join(uploadsDir, response.body.filename)),
+            ).resolves.toBeUndefined();
         });
     });
 
@@ -126,9 +128,7 @@ describe('GET /api/email', () => {
 
         const jwt = require('jsonwebtoken');
         const token = jwt.sign({ email: 'user@example.com' }, process.env.JWT_SECRET);
-        const response = await request(app)
-            .get('/api/email')
-            .set('Authorization', token);
+        const response = await request(app).get('/api/email').set('Authorization', token);
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({

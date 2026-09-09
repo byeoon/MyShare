@@ -10,5 +10,5 @@ export default mergeConfig(
             clearMocks: true,
             restoreMocks: true,
         },
-    })
+    }),
 );

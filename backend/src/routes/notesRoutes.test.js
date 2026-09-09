@@ -23,7 +23,7 @@ vi.mock(
         securityLogMessage: vi.fn(),
         notesLogMessage: vi.fn(),
     }),
-    { virtual: true }
+    { virtual: true },
 );
 
 const AppDataSource = require('../database');
@@ -132,7 +132,16 @@ describe('GET /api/notes/get', () => {
         const jwt = require('jsonwebtoken');
         const token = jwt.sign({ email: 'user@example.com' }, process.env.JWT_SECRET);
         repositories.Note.findAndCountBy.mockResolvedValue([
-            [{ id: 1, title: 'Note', content: 'Content', visibility: false, tags: 'plain', file: null }],
+            [
+                {
+                    id: 1,
+                    title: 'Note',
+                    content: 'Content',
+                    visibility: false,
+                    tags: 'plain',
+                    file: null,
+                },
+            ],
             1,
         ]);
 

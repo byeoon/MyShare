@@ -21,7 +21,7 @@
         "lint:backend": "eslint backend --max-warnings=0",
         "lint:fix": "eslint . --fix",
         "check": "pnpm format:check && pnpm lint",
-        "test": "pnpm --dir frontend test && pnpm --dir backend test",
+        "test": "pnpm --filter frontend --filter backend --parallel test",
         "test:frontend": "pnpm --dir frontend test",
         "test:backend": "pnpm --dir backend test",
         "frontend": "pnpm --filter frontend",
