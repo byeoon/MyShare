@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { page } from '$app/state';
-    import Skeleton from '$lib/components/Skeleton.svelte';
+    // TODO: Use [slug] directory (/notes/[slug]) to display a note based on its slug (id)
 </script>
 
-<p>Random error. please fix.</p>
+<p>Unused page</p>
