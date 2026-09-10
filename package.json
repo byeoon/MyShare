@@ -22,7 +22,7 @@
     "mariadb": "^3.4.0",
     "multer": "^2.3.0",
     "mysql": "^2.18.1",
-    "nodemailer": "^9.0.1",
+    "nodemailer": "^9.1.1",
     "path": "^0.12.7",
     "typeorm": "^0.3.20"
   },
