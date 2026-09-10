@@ -33,31 +33,15 @@ router.post('/users', async (req, res) => {
 
         const existing = await userRepo.findOneBy({ email });
         if (existing) {
-<<<<<<< HEAD
-            return res.status(400).json({ message: 'This user already exists.' });
-        }
-        password = await bcrypt.hash(password, 10);
-=======
             return res.status(400).json({ error: 'User already exists!' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
->>>>>>> 476c78aa424a545f53d074edeff282f1e326d8ad
 
         const user = userRepo.create({ username, email, password: hashedPassword });
         const newuser = await userRepo.save(user);
         const secret = process.env.JWT_SECRET || 'secret'; // TODO
         const userToken = jwt.sign({ email: user.email }, secret);
-<<<<<<< HEAD
-
-        res.cookie('token', userToken, {
-            httpOnly: false,
-            secure: false,
-            maxAge: 3600000 * 24 * 14,
-        });
-        res.status(201).json({ message: 'Account created successfully.', user: newuser, token: userToken });
-=======
         res.status(201).json({ message: 'User created.', user: newuser, token: userToken });
->>>>>>> 476c78aa424a545f53d074edeff282f1e326d8ad
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: `An internal error occurred while trying to make your account. \n ${error}` });
@@ -148,7 +132,6 @@ router.post('/users/resetpassword', async (req, res) => {
 
 // **
 // This logs the user in by checking the email and if the hashed password matches.
-// If all conditions are met, the user gets a token and logs in.
 // Semi breaking change: This now takes email and password instead of username/password.
 // **
 router.post('/users/login', async (req, res) => {
