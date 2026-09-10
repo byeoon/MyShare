@@ -161,7 +161,7 @@ describe('POST /api/users/accountrecovery', () => {
 
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
-            message: 'Your recovery link has been sent to the corresponding email.'
+            message: 'Your recovery link has been sent to the corresponding email.',
         });
     });
 
