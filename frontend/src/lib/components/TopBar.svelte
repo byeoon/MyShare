@@ -1,10 +1,15 @@
 <script lang="ts">
+    import myshare_white from '$lib/assets/myshare_white.png';
     let { toggleSidebar } = $props();
 </script>
 
-
 <div class="drawer-content flex flex-col w-full">
-    <button id="my-drawer-2" class="drawer-toggle" aria-label="Toggle sidebar" onclick={toggleSidebar}></button>
+    <button
+        id="my-drawer-2"
+        class="drawer-toggle"
+        aria-label="Toggle sidebar"
+        onclick={toggleSidebar}
+    ></button>
     <div
         class="flex items-center gap-2 p-4 border-b border-base-content/10 bg-base-100/50 backdrop-blur-md sticky top-0 z-30"
     >
@@ -23,6 +28,7 @@
                 ></path>
             </svg>
         </label>
+        <img src={myshare_white} alt="MyShare" class="h-12 w-auto" />
         <span class="font-bold text-lg">MyShare</span>
     </div>
 </div>

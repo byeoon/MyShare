@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { goto} from '$app/navigation';
+    import { goto } from '$app/navigation';
     import { resolve } from '$app/paths';
 
     let { toggleSidebar } = $props();
@@ -62,15 +62,13 @@
                     </button>
                 </div>
 
-                <button
-                    class="btn btn-primary shadow-md shadow-primary/20 font-bold w-full"
-                >
-                    Create Note
+                <button class="btn btn-primary shadow-md shadow-primary/20 font-bold w-full">
+                    New Note
                 </button>
+                <div class="divider"></div>
 
                 <ul class="menu p-0 gap-1">
-                    <li></li>
-                    <li></li>
+                    <button class="btn btn-neutral font-bold w-full"> Test Button </button>
                 </ul>
             </div>
 
