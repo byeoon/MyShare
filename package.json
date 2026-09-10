@@ -21,6 +21,9 @@
         "lint:backend": "eslint backend --max-warnings=0",
         "lint:fix": "eslint . --fix",
         "check": "pnpm format:check && pnpm lint",
+        "test": "pnpm --filter frontend --filter backend --parallel test",
+        "test:frontend": "pnpm --dir frontend test",
+        "test:backend": "pnpm --dir backend test",
         "frontend": "pnpm --filter frontend",
         "backend": "pnpm --filter backend",
         "frontend:dev": "pnpm --filter frontend dev",
@@ -40,6 +43,7 @@
         "globals": "^17.12.0",
         "prettier": "^3.9.6",
         "prettier-plugin-svelte": "^4.1.1",
-        "typescript-eslint": "^8.69.0"
+        "typescript-eslint": "^8.69.0",
+        "vitest": "^5.0.0"
     }
 }

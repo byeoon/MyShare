@@ -3,16 +3,17 @@
     import Stats from '$lib/components/Stats.svelte';
     import { mode } from 'mode-watcher';
     import { goto } from '$app/navigation';
+    import { resolve } from '$app/paths';
 
     import myshare_black from '$lib/assets/myshare_black.png';
     import myshare_white from '$lib/assets/myshare_white.png';
 
-    let email: string;
-    let username: string;
-    let password: string;
-    let traceback: string | null = null;
+    let email: string = $state('');
+    let username: string = $state('');
+    let password: string = $state('');
+    let traceback: string | null = $state(null);
 
-    let authType: 'login' | 'register' = 'login';
+    let authType: 'login' | 'register' = $state('login');
 
     async function postToServer() {
         const userData = {
@@ -36,12 +37,16 @@
                     } else {
                         traceback = `Error: ${response.status} ${response.statusText}`;
                     }
-                    traceback = `Error: ${response.status} ${response.statusText}`;
+                    return;
                 }
-                // eslint-disable-next-line
                 const responseData = await response.json();
+<<<<<<< HEAD
                 // TODO: Return session token and redirect to home page
                 console.log(responseData);
+=======
+                localStorage.setItem('token', responseData.token);
+                goto(resolve('/'));
+>>>>>>> 476c78aa424a545f53d074edeff282f1e326d8ad
             } else {
                 const response = await fetch('/api/users/login', {
                     method: 'POST',

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { page } from '$app/state';
-    import Skeleton from '$lib/components/Skeleton.svelte';
+    // TODO: Use [slug] directory (/notes/[slug]) to display a note based on its slug (id)
+    // https://svelte.dev/docs/kit/routing#:~:text=src%2Froutes%2Fblog%2F%5Bslug
 </script>
 
-<p>Random error. please fix.</p>
+<p>Unused page</p>

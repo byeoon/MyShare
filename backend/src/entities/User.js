@@ -19,6 +19,7 @@ module.exports = new EntitySchema({
         },
         password: {
             type: 'varchar',
+            unique: false,
         },
     },
 });

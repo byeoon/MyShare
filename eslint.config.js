@@ -22,7 +22,7 @@ export default tseslint.config(
         files: ['backend/**/*.js'],
         languageOptions: {
             ecmaVersion: 'latest',
-            sourceType: 'commonjs',
+            sourceType: 'module',
             globals: {
                 ...globals.node,
             },
