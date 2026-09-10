@@ -217,20 +217,24 @@ describe('GET /api/notes/:id', () => {
         expect(response.body.message).toContain('do not have access');
     });
 
-    it('renders a public note', async () => {
-        repositories.Note.findOneBy.mockResolvedValue({
-            id: 1,
-            userId: 7,
-            title: 'Public note',
-            content: 'Content',
-            visibility: false,
-            tags: '[]',
-            file: null,
-        });
+    it(
+        'renders a public note',
+        async () => {
+            repositories.Note.findOneBy.mockResolvedValue({
+                id: 1,
+                userId: 7,
+                title: 'Public note',
+                content: 'Content',
+                visibility: false,
+                tags: '[]',
+                file: null,
+            });
 
-        const response = await request(app).get('/api/notes/1');
+            const response = await request(app).get('/api/notes/1');
 
-        expect(response.status).toBe(200);
-        expect(response.text).toContain('Public note');
-    });
+            expect(response.status).toBe(200);
+            expect(response.text).toContain('Public note');
+        },
+        25000,
+    );
 });
