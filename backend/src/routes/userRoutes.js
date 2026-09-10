@@ -22,8 +22,7 @@ var transporter = nodemailer.createTransport({
 // The site administrator can disable registration by configuring the .env file. (ALLOW_REGISTERING)
 // **
 router.post('/users', async (req, res) => {
-    const { username, email } = req.body;
-    let { password } = req.body;
+    const { username, email, password } = req.body;
     try {
         const userRepo = AppDataSource.getRepository('User');
         if (process.env.ALLOW_REGISTERING == 'false') {
@@ -34,21 +33,14 @@ router.post('/users', async (req, res) => {
 
         const existing = await userRepo.findOneBy({ email });
         if (existing) {
-            return res.status(400).json({ message: 'User already exists!' });
+            return res.status(400).json({ error: 'User already exists!' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        password = hashedPassword; // This feels insecure.
 
-        const user = userRepo.create({ username, email, password });
+        const user = userRepo.create({ username, email, password: hashedPassword });
         const newuser = await userRepo.save(user);
         const secret = process.env.JWT_SECRET || 'secret';
         const userToken = jwt.sign({ email: user.email }, secret);
-
-        res.cookie('token', userToken, {
-            httpOnly: false,
-            secure: false,
-            maxAge: 3600000 * 24 * 7,
-        }); // 7 days
         res.status(201).json({ message: 'User created.', user: newuser, token: userToken });
     } catch (error) {
         console.log(error);
