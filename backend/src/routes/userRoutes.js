@@ -68,9 +68,9 @@ router.post('/users/sendrecoveryemail', async (req, res) => {
     const recoveryLink = `${process.env.BASE_URL}/recovery.html?token=${token}`; // Will need changing.
 
     if (!process.env.EMAIL_NAME || !process.env.EMAIL_PASSWORD) {
+        console.log(recoveryLink);
         return res.status(200).json({
             message: 'Your recovery link has been sent to the corresponding email.',
-            recoveryLinkForDebugReasonsRemoveLater: `${recoveryLink}`,
         });
     }
 
