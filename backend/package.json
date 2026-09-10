@@ -20,27 +20,27 @@
     "author": "byeoon",
     "license": "ISC",
     "dependencies": {
-        "@tailwindcss/cli": "^4.0.9",
+        "@tailwindcss/cli": "^4.3.3",
         "bcrypt": "^5.1.1",
-        "body-parser": "^1.20.3",
+        "body-parser": "^1.20.6",
         "cookie-parser": "^1.4.7",
-        "dotenv": "^16.4.7",
+        "dotenv": "^16.6.1",
         "ejs": "^3.1.10",
-        "express": "^4.21.2",
-        "jsonwebtoken": "^9.0.2",
-        "mariadb": "^3.4.0",
-        "multer": "^1.4.5-lts.2",
+        "express": "^4.22.2",
+        "jsonwebtoken": "^9.0.3",
+        "mariadb": "^3.5.4",
+        "multer": "1.4.5-lts.2",
         "mysql": "^2.18.1",
-        "nodemailer": "^6.10.0",
+        "nodemailer": "^6.10.1",
         "path": "^0.12.7",
-        "typeorm": "^0.3.20"
+        "typeorm": "^0.3.31"
     },
     "devDependencies": {
         "@vitest/coverage-v8": "^5.0.0",
-        "daisyui": "^5.6.18",
-        "nodemon": "^3.1.9",
+        "daisyui": "^5.7.28",
+        "nodemon": "^3.1.14",
         "supertest": "^7.2.2",
-        "tailwindcss": "^4.0.9",
+        "tailwindcss": "^4.3.3",
         "vitest": "^5.0.0"
     }
 }

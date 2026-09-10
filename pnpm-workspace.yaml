@@ -1,7 +1,32 @@
 packages:
-    - frontend
-    - backend
+  - frontend
+  - backend
 
 allowBuilds:
-    '@parcel/watcher': true
-    bcrypt: true
+  '@parcel/watcher': true
+  bcrypt: true
+
+minimumReleaseAgeExclude:
+  - cookie@0.7.0
+  - nodemailer@7.0.7
+  - tar@7.5.7
+  - tar@7.5.3
+  - tar@7.5.8
+  - tar@7.5.10
+  - tar@7.5.11
+  - tar@7.5.4
+  - nodemailer@8.0.4
+  - nodemailer@8.0.5
+  - tar@7.5.16
+  - nodemailer@8.0.9
+  - nodemailer@8.0.8
+  - nodemailer@7.0.11
+  - tar@7.5.18
+  - tar@7.5.19
+  - tar@7.5.17
+  - tar@7.5.21
+  - qs@6.15.4
+  - qs@6.16.0
+  - nodemailer@9.0.1
+  - nodemailer@9.1.1
+  - nodemailer@9.1.0
