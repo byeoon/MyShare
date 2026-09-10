@@ -69,7 +69,7 @@ describe('POST /api/users/login', () => {
             .send({ email: 'user@example.com', password: 'wrong' });
 
         expect(response.status).toBe(401);
-        expect(response.body).toEqual({ error: 'Invalid password!' });
+        expect(response.body).toEqual({ error: 'Invalid password' });
     });
 
     it('returns a token for valid credentials', async () => {
@@ -112,7 +112,7 @@ describe('POST /api/users', () => {
         });
 
         expect(response.status).toBe(400);
-        expect(response.body).toEqual({ message: 'User already exists!' });
+        expect(response.body).toEqual({ error: 'User already exists!' });
     });
 
     it('creates a user and returns a token', async () => {
@@ -160,7 +160,9 @@ describe('POST /api/users/accountrecovery', () => {
             .send({ email: 'user@example.com' });
 
         expect(response.status).toBe(200);
-        expect(response.body).toEqual({ message: 'Recovery link generated in console.' });
+        expect(response.body).toEqual({
+            message: 'Your recovery link has been sent to the corresponding email.',
+        });
     });
 
     it('sends a recovery email when sender email is configured', async () => {
