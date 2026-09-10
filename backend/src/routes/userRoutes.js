@@ -140,11 +140,12 @@ router.post('/users/login', async (req, res) => {
     const { email, password } = req.body;
     const userRepo = AppDataSource.getRepository('User');
     const user = await userRepo.findOneBy({ email: email });
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
     if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
+
+    const passwordMatch = await bcrypt.compare(password, user.password); // This must stay here, it will cause breaks if moved up. - dumb dev byeoon
+
     if (!passwordMatch) {
         return res.status(401).json({ error: 'Invalid password' });
     }
