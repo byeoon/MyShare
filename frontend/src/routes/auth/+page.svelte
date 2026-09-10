@@ -40,13 +40,8 @@
                     return;
                 }
                 const responseData = await response.json();
-<<<<<<< HEAD
-                // TODO: Return session token and redirect to home page
-                console.log(responseData);
-=======
                 localStorage.setItem('token', responseData.token);
                 goto(resolve('/'));
->>>>>>> 476c78aa424a545f53d074edeff282f1e326d8ad
             } else {
                 const response = await fetch('/api/users/login', {
                     method: 'POST',
