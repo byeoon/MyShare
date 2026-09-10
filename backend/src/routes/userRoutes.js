@@ -44,7 +44,9 @@ router.post('/users', async (req, res) => {
         res.status(201).json({ message: 'User created.', user: newuser, token: userToken });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: `An internal error occurred while trying to make your account. \n ${error}` });
+        res.status(500).json({
+            message: `An internal error occurred while trying to make your account. \n ${error}`,
+        });
     }
 });
 
