@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import { resolve } from '$app/paths';
+    import Divider from './Divider.svelte';
 
     let { toggleSidebar } = $props();
 
@@ -65,7 +66,7 @@
                 <button class="btn btn-primary shadow-md shadow-primary/20 font-bold w-full">
                     New Note
                 </button>
-                <div class="divider"></div>
+                <Divider />
 
                 <ul class="menu p-0 gap-1">
                     <button class="btn btn-neutral font-bold w-full"> Test Button </button>

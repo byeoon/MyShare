@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
     interface Tag {
         text: string;
         color: string;
@@ -73,34 +74,40 @@
         <div class="tabs tabs-lifted tabs-lg w-full sm:w-auto">
             <button
                 type="button"
-                class="tab text-base sm:text-lg font-bold h-14 [--tab-bg:var(--color-base-300)] {activeTab ===
+                class="tab text-base sm:text-lg font-bold h-14 cursor-pointer transition-all duration-200 active:scale-95 hover:opacity-90 [--tab-bg:var(--color-base-300)] {activeTab ===
                 'notes'
                     ? 'tab-active'
-                    : ''}"
+                    : 'opacity-70 hover:opacity-100'}"
                 onclick={() => (activeTab = 'notes')}
             >
                 📝 My Notes
-                <span class="badge badge-sm badge-primary ml-2">{myNotes.length}</span>
+                <span
+                    class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-full bg-primary/20 text-white ml-2 transition-transform duration-200 {activeTab === 'notes' ? 'scale-105' : 'scale-95 opacity-80'}"
+                    >{myNotes.length}</span
+                >
             </button>
 
             <button
                 type="button"
-                class="tab text-base sm:text-lg font-bold h-14 [--tab-bg:var(--color-base-300)] {activeTab ===
+                class="tab text-base sm:text-lg font-bold h-14 cursor-pointer transition-all duration-200 active:scale-95 hover:opacity-90 [--tab-bg:var(--color-base-300)] {activeTab ===
                 'public'
                     ? 'tab-active'
-                    : ''}"
+                    : 'opacity-70 hover:opacity-100'}"
                 onclick={() => (activeTab = 'public')}
             >
                 🌐 Instance Notes
-                <span class="badge badge-sm badge-secondary ml-2">{publicNotes.length}</span>
+                <span
+                    class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-full bg-primary/20 text-white ml-2 transition-transform duration-200 {activeTab === 'public' ? 'scale-105' : 'scale-95 opacity-80'}"
+                    >{publicNotes.length}</span
+                >
             </button>
 
             <button
                 type="button"
-                class="tab text-base sm:text-lg font-bold h-14 [--tab-bg:var(--color-base-300)] {activeTab ===
+                class="tab text-base sm:text-lg font-bold h-14 cursor-pointer transition-all duration-200 active:scale-95 hover:opacity-90 [--tab-bg:var(--color-base-300)] {activeTab ===
                 'settings'
                     ? 'tab-active'
-                    : ''}"
+                    : 'opacity-70 hover:opacity-100'}"
                 onclick={() => (activeTab = 'settings')}
             >
                 ⚙️ Settings
@@ -108,11 +115,11 @@
         </div>
 
         {#if activeTab !== 'settings'}
-            <div class="w-full sm:w-72">
+            <div class="w-full sm:w-72" transition:fade={{ duration: 150 }}>
                 <input
                     type="text"
                     placeholder="Search notes..."
-                    class="input input-bordered input-sm sm:input-md w-full bg-base-200/60 backdrop-blur-sm"
+                    class="input input-bordered input-sm sm:input-md w-full bg-base-200/60 backdrop-blur-sm transition-all duration-200 focus:scale-[1.02]"
                 />
             </div>
         {/if}

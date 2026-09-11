@@ -1,9 +1,9 @@
 <script lang="ts">
     import './layout.css';
+    import './myshare.css';
     import favicons from '$lib/utils/favicons';
     import { ModeWatcher } from 'mode-watcher';
     import Background from '$lib/components/Background.svelte';
-
     let { children } = $props();
 </script>
 

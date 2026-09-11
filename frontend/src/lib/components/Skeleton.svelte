@@ -1,4 +1,0 @@
-<script lang="ts">
-</script>
-
-<div class="skeleton h-32 w-32"></div>

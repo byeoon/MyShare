@@ -18,8 +18,8 @@
     });
 </script>
 
-<div class="card card-border bg-base-300/80 backdrop-blur-xl border-base-100 w-96 shadow-xl">
-    <div class="flex justify-center space-x-8 py-2">
+<div class="rounded-lg border border-zinc-200/10 bg-zinc-900/60 p-6 backdrop-blur-xl shadow-xl">
+    <div class="flex justify-center space-x-8">
         <div class="stat">
             <div class="stat-value text-center text-primary text-center" id="totalUserValue">
                 {users}
