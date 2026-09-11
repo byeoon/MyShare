@@ -15,15 +15,13 @@
     let traceback: string | null = $state(null);
 
     let authType: 'login' | 'register' = $state('login');
-
-    // Reactive theme state
     let isDark = $derived(mode.current === 'dark');
 
     async function postToServer() {
         const userData = {
             email,
             username,
-            password
+            password,
         };
 
         try {
@@ -31,9 +29,9 @@
                 const response = await fetch('/api/users', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(userData)
+                    body: JSON.stringify(userData),
                 });
 
                 if (!response.ok) {
@@ -53,9 +51,9 @@
                 const response = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(userData)
+                    body: JSON.stringify(userData),
                 });
 
                 if (!response.ok) {
@@ -83,22 +81,18 @@
 <div
     class={[
         'hero min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden transition-colors duration-200',
-        isDark ? 'bg-spooky-black text-base-content' : 'bg-space-gray text-base-content'
+        isDark ? 'bg-spooky-black text-base-content' : 'bg-space-gray text-base-content',
     ].join(' ')}
 >
     <div class="flex flex-col gap-4 items-center relative z-10">
         <div class="card-scene w-96">
-            <div
-                class="card-flipper"
-                class:is-flipped={authType === 'register'}
-            >
-                <!-- LOGIN CARD -->
+            <div class="card-flipper" class:is-flipped={authType === 'register'}>
                 <div
                     class={[
                         'card-face card-front card border w-full shadow-xl rounded-lg backdrop-blur-2xl transition-colors duration-200',
                         isDark
                             ? 'bg-light-black/20 border-space-gray/30'
-                            : 'bg-white/70 border-black/10'
+                            : 'bg-white/70 border-black/10',
                     ].join(' ')}
                     inert={authType === 'register'}
                 >
@@ -116,7 +110,7 @@
                         <label
                             class={[
                                 'input w-full mt-2 backdrop-blur-sm',
-                                isDark ? 'bg-base-200/60' : 'bg-base-200/80'
+                                isDark ? 'bg-base-200/60' : 'bg-base-200/80',
                             ].join(' ')}
                         >
                             <svg
@@ -135,18 +129,13 @@
                                 />
                             </svg>
 
-                            <input
-                                id="email"
-                                type="email"
-                                placeholder="Email"
-                                bind:value={email}
-                            />
+                            <input id="email" type="email" placeholder="Email" bind:value={email} />
                         </label>
 
                         <label
                             class={[
                                 'input w-full mt-2 backdrop-blur-sm',
-                                isDark ? 'bg-base-200/60' : 'bg-base-200/80'
+                                isDark ? 'bg-base-200/60' : 'bg-base-200/80',
                             ].join(' ')}
                         >
                             <svg
@@ -174,16 +163,16 @@
                         </label>
 
                         <button
-                        class={[
-                        'btn mt-4 shadow-lg shadow-primary/20 bg-ms-main',
-                         !isDark && 'text-white'
-                                                 ]}
-                         style="padding: 20px"
-                         id="login"
-                         type="submit"
-                         onclick={postToServer}
-                                                >
-                          Login
+                            class={[
+                                'btn mt-4 shadow-lg shadow-primary/20 bg-ms-main',
+                                !isDark && 'text-white',
+                            ]}
+                            style="padding: 20px"
+                            id="login"
+                            type="submit"
+                            onclick={postToServer}
+                        >
+                            Login
                         </button>
 
                         {#if traceback && authType === 'login'}
@@ -213,13 +202,12 @@
                     </div>
                 </div>
 
-                <!-- REGISTER CARD -->
                 <div
                     class={[
                         'card-face card-back card border w-full shadow-xl rounded-lg backdrop-blur-2xl transition-colors duration-200',
                         isDark
                             ? 'bg-light-black/20 border-space-gray/30'
-                            : 'bg-white/70 border-black/10'
+                            : 'bg-white/70 border-black/10',
                     ].join(' ')}
                     inert={authType === 'login'}
                 >
@@ -237,7 +225,7 @@
                         <label
                             class={[
                                 'input w-full mt-2 backdrop-blur-sm',
-                                isDark ? 'bg-base-200/60' : 'bg-base-200/80'
+                                isDark ? 'bg-base-200/60' : 'bg-base-200/80',
                             ].join(' ')}
                         >
                             <svg
@@ -267,7 +255,7 @@
                         <label
                             class={[
                                 'input w-full mt-2 backdrop-blur-sm',
-                                isDark ? 'bg-base-200/60' : 'bg-base-200/80'
+                                isDark ? 'bg-base-200/60' : 'bg-base-200/80',
                             ].join(' ')}
                         >
                             <svg
@@ -296,7 +284,7 @@
                         <label
                             class={[
                                 'input w-full mt-2 backdrop-blur-sm',
-                                isDark ? 'bg-base-200/60' : 'bg-base-200/80'
+                                isDark ? 'bg-base-200/60' : 'bg-base-200/80',
                             ].join(' ')}
                         >
                             <svg

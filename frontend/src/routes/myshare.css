@@ -1,41 +1,44 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-*: initial;
-  --color-white: #fff;
-  --color-light-gray: #F1F1F1;
-  --color-space-gray: #939393;
-  --color-light-black: #272727;
-  --color-spooky-black: #161616;
-  --color-ms-main: #605DFF;
-  --color-ms-light: #B5B4FF;
-  --color-ms-dark: #A6FFDA;
+    --color-*: initial;
+    --color-white: #fff;
+    --color-light-gray: #f1f1f1;
+    --color-space-gray: #939393;
+    --color-light-black: #272727;
+    --color-spooky-black: #161616;
+    --color-ms-main: #605dff;
+    --color-ms-light: #b5b4ff;
+    --color-ms-dark: #a6ffda;
 }
 
-/* DaisyUI's compiled themes follow data-theme / prefers-color-scheme.
-   Mode Watcher toggles the `.dark` class instead, so map tokens to that. */
+/* 
+DaisyUI's compiled themes follow data-theme / prefers-color-scheme.
+   Mode Watcher toggles the `.dark` class instead. 
+   We are deprecating daisyUI usage soon so it shouldnt matter
+*/
 html:not(.dark),
 html:not(.dark)[data-theme] {
-  color-scheme: light;
-  --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(95.913% 0.01263 236.91);
-  --color-base-300: oklch(91.729% 0.01867 17.192);
-  --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: #605DFF;
-  --color-primary-content: oklch(77.755% 0.02789 271.78);
-  --root-bg: var(--color-base-100);
+    color-scheme: light;
+    --color-base-100: oklch(100% 0 0);
+    --color-base-200: oklch(95.913% 0.01263 236.91);
+    --color-base-300: oklch(91.729% 0.01867 17.192);
+    --color-base-content: oklch(21% 0.006 285.885);
+    --color-primary: #605dff;
+    --color-primary-content: oklch(77.755% 0.02789 271.78);
+    --root-bg: var(--color-base-100);
 }
 
 html.dark,
 html.dark[data-theme] {
-  color-scheme: dark;
-  --color-base-100: oklch(25.33% 0.016 252.42);
-  --color-base-200: oklch(23.26% 0.014 253.1);
-  --color-base-300: oklch(21.15% 0.012 254.09);
-  --color-base-content: oklch(97.807% 0.029 256.847);
-  --color-primary: #605DFF;
-  --color-primary-content: oklch(96% 0.018 272.314);
-  --root-bg: var(--color-base-100);
+    color-scheme: dark;
+    --color-base-100: oklch(25.33% 0.016 252.42);
+    --color-base-200: oklch(23.26% 0.014 253.1);
+    --color-base-300: oklch(21.15% 0.012 254.09);
+    --color-base-content: oklch(97.807% 0.029 256.847);
+    --color-primary: #605dff;
+    --color-primary-content: oklch(96% 0.018 272.314);
+    --root-bg: var(--color-base-100);
 }
