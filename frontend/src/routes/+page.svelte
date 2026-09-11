@@ -38,7 +38,7 @@
                 return { success: false, message: 'Failed to create note', error };
             }
         }
-        return { success: true, note: await res.json() as Note };
+        return { success: true, note: (await res.json()) as Note };
     }
 
     let editorOpen = $state(false);
@@ -48,13 +48,12 @@
     }
 </script>
 
-<TopBar toggleSidebar={toggleSidebar} />
+<TopBar {toggleSidebar} />
 {#if showSidebar}
-    <Sidebar toggleSidebar={toggleSidebar} />
+    <Sidebar {toggleSidebar} />
 {/if}
 <main class="flex-1 p-6">
     <div class="flex flex-col items-center justify-start w-full py-4">
-        <p class="text-lg font-bold">Welcome to the dashboard!</p>
         <DashboardTabs />
     </div>
     <CreateNote onclick={() => (editorOpen = true)} />

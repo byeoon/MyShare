@@ -45,7 +45,7 @@
 <div class="drawer min-h-screen fixed top-0 left-0 z-50 bg-black/30">
     <div class="w-[200px] absolute left-0 top-0 h-full">
         <aside
-            class="menu bg-base-200/90 backdrop-blur-2xl border-r border-base-content/10 text-base-content min-h-full w-80 p-4 flex flex-col justify-between"
+            class="menu dark:bg-spooky-black light:bg-space-gray backdrop-blur-2xl border-r border-base-content/10 text-base-content min-h-full w-80 p-4 flex flex-col justify-between"
         >
             <div class="space-y-4">
                 <div class="flex items-center justify-between p-2">

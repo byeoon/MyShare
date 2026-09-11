@@ -19,7 +19,7 @@
         onclick={toggleSidebar}
     ></button>
     <div
-        class="flex items-center gap-2 p-4 border-b border-base-content/10 bg-base-100/50 backdrop-blur-md sticky top-0 z-30"
+        class="flex items-center gap-2 p-4 border-b border-base-content/10 backdrop-blur-md sticky top-0 z-30 dark:bg-spooky-black light:bg-space-gray"
     >
         <label for="my-drawer-2" class="btn btn-square btn-ghost" aria-label="Open menu">
             <svg

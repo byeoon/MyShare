@@ -75,7 +75,7 @@
 </script>
 
 <div
-    class="hero bg-base-200 min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"
+    class="hero bg-spooky-black min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden"
 >
     <div class="flex flex-col gap-4 items-center relative z-10">
         <div class="card-scene w-96">
@@ -136,26 +136,12 @@
                             />
                         </label>
                         <button
-                            class="btn btn-primary mt-4 shadow-lg shadow-primary/20"
+                            class="btn mt-4 shadow-lg shadow-primary/20 bg-ms-main"
                             style="padding: 20px"
                             id="login"
                             type="submit"
                             onclick={postToServer}
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-6"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15"
-                                />
-                            </svg>
                             Login
                         </button>
                         {#if traceback && authType === 'login'}
@@ -265,26 +251,12 @@
                             />
                         </label>
                         <button
-                            class="btn btn-primary mt-4 shadow-xl shadow-primary/20"
+                            class="btn mt-4 shadow-xl shadow-primary/20 bg-ms-main"
                             style="padding: 20px"
                             id="register-btn"
                             type="submit"
                             onclick={postToServer}
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-6"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                                />
-                            </svg>
                             Register
                         </button>
                         {#if traceback && authType === 'register'}
