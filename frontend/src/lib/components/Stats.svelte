@@ -18,7 +18,9 @@
     });
 </script>
 
-<div class="rounded-lg border border-zinc-200/10 bg-zinc-900/60 p-6 backdrop-blur-xl shadow-xl">
+<div
+    class="rounded-lg border border-space-gray/30 bg-light-black/20 p-6 backdrop-blur-xl shadow-xl"
+>
     <div class="flex justify-center space-x-8">
         <div class="stat">
             <div class="stat-value text-center text-primary text-center" id="totalUserValue">

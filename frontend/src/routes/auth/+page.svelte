@@ -81,7 +81,7 @@
         <div class="card-scene w-96">
             <div class="card-flipper" class:is-flipped={authType === 'register'}>
                 <div
-                    class="card-face card-front card border bg-zinc-900/60 backdrop-blur-2xl border-zinc-200/10 w-full shadow-xl rounded-lg"
+                    class="card-face card-front card border bg-light-black/20 backdrop-blur-2xl border-space-gray/30 w-full shadow-xl rounded-lg"
                     inert={authType === 'register'}
                 >
                     <div class="card-body">
@@ -169,7 +169,7 @@
                 </div>
 
                 <div
-                    class="card-face card-back card border bg-zinc-900/60 backdrop-blur-2xl border-zinc-200/10 w-full shadow-xl rounded-lg"
+                    class="card-face card-back card border bg-light-black/20 backdrop-blur-2xl border-space-gray/30 w-full shadow-xl rounded-lg"
                     inert={authType === 'login'}
                 >
                     <div class="card-body">

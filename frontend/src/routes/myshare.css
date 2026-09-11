@@ -5,8 +5,9 @@
   --color-white: #fff;
   --color-light-gray: #F1F1F1;
   --color-space-gray: #939393;
+  --color-light-black: #272727;
   --color-spooky-black: #161616;
   --color-ms-main: #605DFF;
-  --color-base-100: #B5B4FF;
-  --color-base-200: #A6FFDA;
+  --color-ms-light: #B5B4FF;
+  --color-ms-dark: #A6FFDA;
 }
