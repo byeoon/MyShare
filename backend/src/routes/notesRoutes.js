@@ -223,7 +223,7 @@ router.get('/notes/:id', async (req, res) => {
             note.tags = note.tags ? [{ text: note.tags, color: '#3240ffbb' }] : [];
         }
 
-        res.render('note', { note });
+        return res.status(200).json({ note });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Internal error', error: error.message });
