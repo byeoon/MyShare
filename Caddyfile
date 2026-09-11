@@ -1,4 +1,4 @@
-{$APP_DOMAIN} {
+{$APP_DOMAIN::80} {
     @api path /api /api/*
     handle @api {
         reverse_proxy backend:8000
