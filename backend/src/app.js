@@ -9,21 +9,9 @@ const jwt = require('jsonwebtoken');
 const userRoutes = require('./routes/userRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const notesRoutes = require('./routes/notesRoutes');
-const multer = require('multer');
+const formidable = require('formidable');
 const cookieParser = require('cookie-parser');
 const { coreLogMessage, securityLogMessage } = require('./utils/Logger');
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '..', 'uploads'));
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    },
-});
-const upload = multer({ storage: storage });
-
 const app = express();
 
 app.use(cookieParser());
@@ -35,7 +23,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'public', 'login.html'));
+    res.sendFile(path.resolve(__dirname, '..', 'public', ''));
 });
 
 app.get('/api/version', async (req, res) => {
@@ -86,12 +74,30 @@ app.get('/api/email', verifyToken, async (req, res) => {
     }
 });
 
-app.post('/api/upload', upload.single('file'), async (req, res) => {
-    if (!req.file) {
+app.post('/api/upload', async (req, res) => {
+    const form = formidable({
+        uploadDir: path.join(__dirname, '..', 'uploads'),
+        keepExtensions: true,
+        filename: (name, ext, part) => {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+            return `${part.name}-${uniqueSuffix}${ext}`;
+        },
+    });
+
+    try {
+        const [, files] = await form.parse(req);
+        const file = Array.isArray(files.file) ? files.file[0] : files.file;
+
+        if (!file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        coreLogMessage('Image upload complete: ' + file.newFilename);
+        res.json({ filename: file.newFilename });
+    } catch {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    coreLogMessage('Image upload complete: ' + req.file.filename);
-    res.json({ filename: req.file.filename });
 });
+
 
 module.exports = app;
