@@ -232,5 +232,5 @@ describe('GET /api/notes/:id', () => {
 
         expect(response.status).toBe(200);
         expect(response.text).toContain('Public note');
-    }, 25000);
+    });
 });
