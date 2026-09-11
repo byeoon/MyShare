@@ -8,7 +8,7 @@
     transition:fade={{ duration: 200 }}
 >
     <div
-        class="bg-base-100/90 backdrop-blur-2xl border border-base-content/10 shadow-2xl rounded-2xl w-full max-w-3xl h-[80vh] max-h-[750px] flex flex-col overflow-hidden relative"
+        class="bg-base-100 border border-base-content/10 shadow-2xl rounded-2xl w-full max-w-3xl h-[80vh] max-h-[750px] flex flex-col overflow-hidden relative"
         transition:scale={{ duration: 300, start: 0.85, opacity: 0, easing: quintOut }}
     >
         <div class="font-bold text-2xl text-center m-[30px]">Create Note</div>
