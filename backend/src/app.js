@@ -34,9 +34,6 @@ app.use('/api', notesRoutes);
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'public', 'login.html'));
 });
@@ -95,10 +92,6 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     }
     coreLogMessage('Image upload complete: ' + req.file.filename);
     res.json({ filename: req.file.filename });
-});
-
-app.use((req, res, _next) => {
-    res.status(404).render('404', { message: 'Page Not Found' });
 });
 
 module.exports = app;

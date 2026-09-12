@@ -1,0 +1,31 @@
+name: Deploy MyShare Nightly
+
+on:
+    push:
+        branches:
+            - dev
+
+jobs:
+    deploy:
+        runs-on: self-hosted
+        defaults:
+            run:
+                working-directory: /opt/MyShare
+
+        steps:
+            - name: Update source code
+              run: |
+                  git fetch origin dev
+                  git reset --hard origin/dev
+
+            - name: Spin down docker containers
+              run: |
+                  sudo docker compose -f /opt/MyShare/compose.yml down
+
+            - name: Build containers
+              run: |
+                  sudo docker compose -f /opt/MyShare/compose.yml build
+
+            - name: Deploy compose
+              run: |
+                  sudo docker compose -f /opt/MyShare/compose.yml up -d
